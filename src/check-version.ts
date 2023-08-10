@@ -1,5 +1,4 @@
 import * as fs from 'fs/promises'
-import {get} from 'https'
 
 export async function checkVersion(location: string) {
   var filepathsX = 0

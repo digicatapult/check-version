@@ -25,6 +25,7 @@ inputs:
     default: 'default value if applicable'
 runs:
   using: 'composite'
+  main: 'lib/main.js'
   steps:
     - run: echo some location ${{inputs.location}}
       shell: bash
