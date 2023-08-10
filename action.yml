@@ -24,7 +24,7 @@ inputs:
     description: 'input description here'
     default: 'default value if applicable'
 runs:
-  using: 'composite'
+  using: 'node16'
   main: 'lib/main.js'
   # steps:
   #   - run: echo some location ${{inputs.location}}
