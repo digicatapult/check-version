@@ -8,8 +8,8 @@ export async function checkVersion(location: string) {
 
   try {
     //get all files in a location
-    // const files = await fs.readdir(location)
-    const files = await fs.readdir('./__tests__/')
+    const files = await fs.readdir(location)
+    // const files = await fs.readdir('./__tests__/')
 
     const filtered = files
       .filter(function (str) {
