@@ -10,10 +10,10 @@ async function run(): Promise<void> {
   try {
     const ms: string = core.getInput('milliseconds')
     const location: string = core.getInput('location')
-    const owner: string = core.getInput('owner')
-    const repo: string = core.getInput('repo')
-    const token: string = core.getInput('token')
-    const pr_number = core.getInput('pr_number')
+    // const owner: string = core.getInput('owner')
+    // const repo: string = core.getInput('repo')
+    // const token: string = core.getInput('token')
+    // const pr_number = core.getInput('pr_number')
 
     console.log('heeelo')
 
@@ -26,6 +26,8 @@ async function run(): Promise<void> {
     core.setOutput('time', new Date().toTimeString())
 
     core.debug('location')
+    const myRepoURL = getRepoURL(context)
+    console.log(`This repo's URL is: ${myRepoURL}`)
 
     await checkVersion(location)
   } catch (error) {
