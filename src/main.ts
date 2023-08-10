@@ -10,6 +10,7 @@ async function run(): Promise<void> {
     const owner: string = core.getInput('owner')
     const repo: string = core.getInput('repo')
     const token: string = core.getInput('token')
+    const pr_number = core.getInput('pr_number')
 
     core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
@@ -23,6 +24,23 @@ async function run(): Promise<void> {
 
     //instance of octokit to call GitHub's Rest API
     const octokit = new github.getOctokit(token)
+    const {data: changedFiles} = await octokit.rest.pulls.listFiles({
+      owner,
+      repo,
+      pull_number: pr_number
+    })
+    console.log('====================')
+    console.log(changedFiles)
+    await octokit.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number: pr_number,
+      body: `
+        Pull Request #${pr_number} has been updated with: \n
+        just some stuff here to see if it works 
+
+      `
+    })
 
     await checkVersion(location)
   } catch (error) {
