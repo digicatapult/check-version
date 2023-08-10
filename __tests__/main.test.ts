@@ -1,4 +1,5 @@
 import {wait} from '../src/wait'
+import {checkVersion} from '../src/check-version'
 import * as process from 'process'
 import * as cp from 'child_process'
 import * as path from 'path'
@@ -15,6 +16,11 @@ test('wait 500 ms', async () => {
   const end = new Date()
   var delta = Math.abs(end.getTime() - start.getTime())
   expect(delta).toBeGreaterThan(450)
+})
+
+test('location', async () => {
+  const version = await checkVersion('...checking version')
+  expect(version).toBe(2)
 })
 
 // shows how the runner will run a javascript action with env / stdout protocol
