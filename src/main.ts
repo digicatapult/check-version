@@ -28,9 +28,13 @@ async function run(): Promise<void> {
     console.log(`This repo's URL is: ${myRepoURL}`)
 
     getTags().then(files => {
-      console.log(`
-        Your files: \n
-        ${JSON.stringify(files, undefined, 2)}`)
+      if (files) {
+        files.forEach(element => {
+          console.log(`
+        Your tag: \n
+        ${JSON.stringify(element, undefined, 2)}`)
+        })
+      }
     })
 
     await checkVersion(location)
