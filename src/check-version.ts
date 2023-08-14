@@ -63,8 +63,6 @@ export async function checkVersion(
         })
         //newest tag
         newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
-        console.log(`Newest Tag: ${newestTag}`)
-        console.log(`Oldest Tag: ${sortedTaggedVersions[0].name}`)
       }
     })
 
@@ -72,10 +70,10 @@ export async function checkVersion(
 
     //check if newest tag from repo is less than package
     if (newestTag) {
-      console.log('comparison')
-      console.log(semver.compare(newestTag, packageJson['version']))
+      throw new Error(`comparison \n
+      ${semver.compare(newestTag, packageJson['version'])}`)
     } else {
-      console.log(`no newest tag`)
+      throw new Error(`no newest tag`)
     }
   } catch (err) {
     console.error(err)
