@@ -63,19 +63,26 @@ export async function checkVersion(location: string, ghToken: string) {
 
     //assert comparisons to newest tag
     if (semver.compare(newestTag, packageJson['version']) == 1) {
-      return core.setFailed(
+      core.setOutput('is_new_version', false)
+      core.setFailed(
         `Newest tag: ${newestTag} is a higher version than package.json: ${packageJson['version']}`
       )
     } else if (semver.compare(newestTag, packageJson['version']) == -1) {
+      core.setOutput('version', packageJson['version'])
+      core.setOutput('is_new_version', true)
+      core.setOutput('build_date', new Date())
+
       console.log(
         `Newest tag: ${newestTag} is a lower version than package.json: ${packageJson['version']} \n so we must be releasing new version`
       )
     } else if (semver.compare(newestTag, packageJson['version']) == 0) {
-      return core.setFailed(
+      core.setOutput('is_new_version', false)
+      core.setOutput('is_prerelease', false)
+      core.setFailed(
         `Newest tag: ${newestTag} is the same version as package.json: ${packageJson['version']} so not a new version`
       )
     } else {
-      return core.setFailed(`no newest tag`)
+      core.setFailed(`no newest tag`)
     }
   } catch (err) {
     console.error(err)
