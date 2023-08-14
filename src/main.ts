@@ -58,7 +58,7 @@ async function getDiff() {
     //     base: context.payload.pull_request.base.sha,
     //     page: 100
     // })
-    return result || []
+    return result.data || []
   }
 }
 
