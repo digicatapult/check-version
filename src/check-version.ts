@@ -1,13 +1,11 @@
 import * as fs from 'fs/promises'
 import {context, getOctokit} from '@actions/github'
 import * as semver from 'semver'
+import * as core from '@actions/core'
 
 type GithubContext = typeof context
 
-export async function checkVersion(
-  location: string,
-  ghToken: string
-): Promise<number> {
+export async function checkVersion(location: string, ghToken: string) {
   let filepathsX = 0
   let packageJson: any
   let packageLockJson: any
@@ -67,13 +65,12 @@ export async function checkVersion(
         const taggedVersions = tags
           .filter(t => t.name.match(/\d+.\d+.\d+/))
           .sort((a, b) => semver.compare(a.name, b.name))
-        // const sortedTaggedVersions = taggedVersions.sort(semver.compare)
 
-        taggedVersions.forEach(async element => {
-          console.log(`
-        Your tag: \n
-        ${JSON.stringify(element, undefined, 2)}`)
-        })
+        // taggedVersions.forEach(async element => {
+        //   console.log(`
+        // Your tag: \n
+        // ${JSON.stringify(element, undefined, 2)}`)
+        // })
 
         sortedTaggedVersions = taggedVersions
       }
@@ -87,8 +84,10 @@ export async function checkVersion(
 
     //check if newest tag from repo is less than package
     if (semver.compare(newestTag, packageJson['version']) == 1) {
-      // let num = semver.compare(newestTag, packageJson['version'])
       console.log(
+        `Newest tag: ${newestTag} is a higher version than package.json: ${packageJson['version']}`
+      )
+      return core.setFailed(
         `Newest tag: ${newestTag} is a higher version than package.json: ${packageJson['version']}`
       )
     } else if (semver.compare(newestTag, packageJson['version']) == -1) {
@@ -97,7 +96,7 @@ export async function checkVersion(
       )
     } else if (semver.compare(newestTag, packageJson['version']) == 0) {
       console.log(
-        `Newest tag: ${newestTag} is the same version as package.json: ${packageJson['version']} so no new version`
+        `Newest tag: ${newestTag} is the same version as package.json: ${packageJson['version']} so not a new version`
       )
     } else {
       console.log(`no newest tag`)
@@ -106,7 +105,7 @@ export async function checkVersion(
     console.error(err)
   }
 
-  return filepathsX
+  // return filepathsX
 }
 
 async function getFilePath(file: string): Promise<string> {
