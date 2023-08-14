@@ -12,6 +12,13 @@ export async function checkVersion(
   let packageJson: any
   let packageLockJson: any
   let newestTag: string | undefined = undefined
+  let sortedTaggedVersions: {
+    name: string
+    commit: {sha: string; url: string}
+    zipball_url: string
+    tarball_url: string
+    node_id: string
+  }[] = []
 
   try {
     //get all files in a location
@@ -54,26 +61,27 @@ export async function checkVersion(
 
     // get tags and compare
     //processing tags
-    getTags(ghToken).then(tags => {
+    await getTags(ghToken).then(tags => {
       if (tags) {
         // filter out tags that don't look like releases
-        const sortedTaggedVersions = tags
+        const taggedVersions = tags
           .filter(t => t.name.match(/\d+.\d+.\d+/))
           .sort((a, b) => semver.compare(a.name, b.name))
         // const sortedTaggedVersions = taggedVersions.sort(semver.compare)
 
-        sortedTaggedVersions.forEach(element => {
+        taggedVersions.forEach(async element => {
           console.log(`
         Your tag: \n
         ${JSON.stringify(element, undefined, 2)}`)
         })
-        //newest tag
-        newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
-        console.log(`in ` + newestTag)
+
+        sortedTaggedVersions = taggedVersions
       }
     })
 
-    console.log(`out` + newestTag)
+    //newest tag
+    newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
+    console.log(`newest tag` + newestTag)
 
     console.log(`sth`)
 
