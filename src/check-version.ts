@@ -45,10 +45,16 @@ export async function checkVersion(
     //     PACKAGE_LOCK_VERSION: ${packageLockJson['version']}
     //     `)
     // }
+    if (packageJson['version'] != packageLockJson['version']) {
+      console.log(`Inconsistent versions detected \n
+        PACKAGE_VERSION: ${packageJson['version']}\n
+        PACKAGE_LOCK_VERSION: ${packageLockJson['version']}
+        `)
+    }
 
     // get tags and compare
     //processing tags
-    await getTags(ghToken).then(tags => {
+    getTags(ghToken).then(tags => {
       if (tags) {
         // filter out tags that don't look like releases
         const sortedTaggedVersions = tags
@@ -70,10 +76,11 @@ export async function checkVersion(
 
     //check if newest tag from repo is less than package
     if (newestTag) {
-      throw new Error(`comparison \n
-      ${semver.compare(newestTag, packageJson['version'])}`)
+      let num = semver.compare(newestTag, packageJson['version'])
+      console.log(`comparison \n
+      ${num}`)
     } else {
-      throw new Error(`no newest tag`)
+      console.log(`no newest tag`)
     }
   } catch (err) {
     console.error(err)
