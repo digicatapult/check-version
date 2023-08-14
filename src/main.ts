@@ -31,7 +31,9 @@ async function run(): Promise<void> {
       if (files) {
         files.forEach(element => {
           console.log(`
-        Your tag is: \n
+
+
+        Your tags is: \n
         ${JSON.stringify(element, undefined, 2)}`)
         })
       }
