@@ -1,10 +1,10 @@
 import * as core from '@actions/core'
 import {wait} from './wait'
 import {checkVersion} from './check-version'
-import {context, getOctokit} from '@actions/github'
-import * as semver from 'semver'
+// import {context, getOctokit} from '@actions/github'
+// import * as semver from 'semver'
 
-type GithubContext = typeof context
+// type GithubContext = typeof context
 
 const ghToken: string = core.getInput('token')
 // const pr_number = core.getInput('pr_number')

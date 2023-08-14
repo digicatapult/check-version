@@ -2,7 +2,12 @@ import * as fs from 'fs/promises'
 import {context, getOctokit} from '@actions/github'
 import * as semver from 'semver'
 
-export async function checkVersion(location: string, ghToken: string) {
+type GithubContext = typeof context
+
+export async function checkVersion(
+  location: string,
+  ghToken: string
+): Promise<number> {
   let filepathsX = 0
   let packageJson: any
   let packageLockJson: any
@@ -43,7 +48,7 @@ export async function checkVersion(location: string, ghToken: string) {
 
     // get tags and compare
     //processing tags
-    getTags(ghToken).then(tags => {
+    await getTags(ghToken).then(tags => {
       if (tags) {
         // filter out tags that don't look like releases
         const sortedTaggedVersions = tags
