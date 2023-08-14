@@ -63,6 +63,7 @@ async function getReadme(): Promise<string | never[] | undefined> {
       repo: context.repo.repo,
       owner: context.repo.owner
     })
+    console.log(result)
 
     return result.data.name || []
   }
