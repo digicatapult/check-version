@@ -27,7 +27,7 @@ async function run(): Promise<void> {
     const myRepoURL = getRepoURL(context)
     console.log(`This repo's URL is: ${myRepoURL}`)
 
-    await getReadme().then(files => {
+    getTags().then(files => {
       console.log(`
         Your files: \n
         ${JSON.stringify(files, undefined, 2)}`)
@@ -43,20 +43,21 @@ function getRepoURL({repo, serverUrl}: GithubContext): string {
   return `${serverUrl}/${repo.owner}/${repo.repo}`
 }
 async function getTags() {
-  if (ghToken && context.payload.pull_request) {
+  if (ghToken) {
     const octokit = getOctokit(ghToken)
 
     const result = await octokit.rest.repos.listTags({
       repo: context.repo.repo,
       owner: context.repo.owner
     })
+    console.log(result)
 
     return result.data[0].name || []
   }
 }
 
 async function getReadme(): Promise<string | never[] | undefined> {
-  if (ghToken) {
+  if (ghToken && context.payload.pull_request) {
     const octokit = getOctokit(ghToken)
 
     const result = await octokit.rest.repos.getReadme({
