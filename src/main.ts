@@ -32,10 +32,10 @@ async function run(): Promise<void> {
     getTags().then(tags => {
       if (tags) {
         // filter out tags that don't look like releases
-        const sortedTaggedVersions = tags.filter(t =>
-          t.name.match(/\d+.\d+.\d+/)
-        )
-        // .sort((a, b) => semver.gt(a.name, b.name))
+        const sortedTaggedVersions = tags
+          .filter(t => t.name.match(/\d+.\d+.\d+/))
+          .sort((a, b) => Number(semver.gt(a.name, b.name)))
+
         sortedTaggedVersions.forEach(element => {
           console.log(`
         Your tag: \n
