@@ -7,7 +7,7 @@ import {context, getOctokit} from '@actions/github'
 type GithubContext = typeof context
 
 const ghToken: string = core.getInput('token')
-const pr_number = core.getInput('pr_number')
+// const pr_number = core.getInput('pr_number')
 const ms: string = core.getInput('milliseconds')
 const location: string = core.getInput('location')
 
@@ -28,9 +28,13 @@ async function run(): Promise<void> {
     console.log(`This repo's URL is: ${myRepoURL}`)
 
     getDiff().then(files => {
-      console.log(`
-      Your PR diff: \n
-      ${JSON.stringify(files, undefined, 2)}`)
+      if (files) {
+        files.forEach(element => {
+          console.log(`
+        Your tag is: \n
+        ${JSON.stringify(element, undefined, 2)}`)
+        })
+      }
     })
 
     await checkVersion(location)

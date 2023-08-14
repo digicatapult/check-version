@@ -45,6 +45,6 @@ export async function checkVersion(location: string) {
   return filepathsX
 }
 
-async function getFilePath(file: string) {
+async function getFilePath(file: string): Promise<string> {
   return './__tests__/' + file
 }
