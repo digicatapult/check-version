@@ -27,10 +27,10 @@ async function run(): Promise<void> {
     const myRepoURL = getRepoURL(context)
     console.log(`This repo's URL is: ${myRepoURL}`)
 
-    getReadme().then(files => {
+    await getReadme().then(files => {
       console.log(`
         Your files: \n
-        ${JSON.stringify(files, undefined, 2)}/`)
+        ${JSON.stringify(files, undefined, 2)}`)
     })
 
     await checkVersion(location)
