@@ -42,7 +42,7 @@ async function run(): Promise<void> {
 function getRepoURL({repo, serverUrl}: GithubContext): string {
   return `${serverUrl}/${repo.owner}/${repo.repo}`
 }
-async function getDiff() {
+async function getTags() {
   if (ghToken && context.payload.pull_request) {
     const octokit = getOctokit(ghToken)
 

@@ -6,12 +6,7 @@ inputs:
     required: true
     description: 'path to files'
     default: './'
-  # owner:
-  #   description: 'The owner of the repository'
-  #   required: true
-  # repo:
-  #   description: 'The name of the repository'
-  #   required: true
+
   token:
     description: 'The token to use to access the GitHub API'
     required: true
@@ -25,15 +20,4 @@ inputs:
     default: 'default value if applicable'
 runs:
   using: 'node16'
-  main: 'dist/main.js'
-  # steps:
-  #   - run: echo some location ${{inputs.location}}
-  #     shell: bash
-  #   - run: echo some owner ${{inputs.owner}}
-  #     shell: bash
-  #   - run: echo some repo ${{inputs.repo}}
-  #     shell: bash
-  #   - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-  #     shell: bash
-  #   - run: echo goodbye ====
-  #     shell: bash
+  main: 'lib/main.js'
