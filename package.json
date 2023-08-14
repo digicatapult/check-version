@@ -28,7 +28,9 @@
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
     "@octokit/rest": "^20.0.1",
-    "fs": "^0.0.1-security"
+    "@types/semver": "^7.5.0",
+    "fs": "^0.0.1-security",
+    "semver": "^7.5.4"
   },
   "devDependencies": {
     "@types/node": "^18.17.4",

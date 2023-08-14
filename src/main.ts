@@ -1,8 +1,9 @@
 import * as core from '@actions/core'
 import {wait} from './wait'
 import {checkVersion} from './check-version'
-
 import {context, getOctokit} from '@actions/github'
+import * as semver from 'semver'
+// const semverGt = require('semver/functions/gt');
 
 type GithubContext = typeof context
 
@@ -27,9 +28,15 @@ async function run(): Promise<void> {
     const myRepoURL = getRepoURL(context)
     console.log(`This repo's URL is: ${myRepoURL}`)
 
-    getTags().then(files => {
-      if (files) {
-        files.forEach(element => {
+    //processing tags
+    getTags().then(tags => {
+      if (tags) {
+        // filter out tags that don't look like releases
+        const sortedTaggedVersions = tags.filter(t =>
+          t.name.match(/\d+.\d+.\d+/)
+        )
+        // .sort((a, b) => semver.gt(a.name, b.name))
+        sortedTaggedVersions.forEach(element => {
           console.log(`
         Your tag: \n
         ${JSON.stringify(element, undefined, 2)}`)
@@ -54,23 +61,9 @@ async function getTags() {
       repo: context.repo.repo,
       owner: context.repo.owner
     })
-    console.log(result)
+    // console.log(result)
 
     return result.data || []
-  }
-}
-
-async function getReadme(): Promise<string | never[] | undefined> {
-  if (ghToken && context.payload.pull_request) {
-    const octokit = getOctokit(ghToken)
-
-    const result = await octokit.rest.repos.getReadme({
-      repo: context.repo.repo,
-      owner: context.repo.owner
-    })
-    console.log(result)
-
-    return result.data.name || []
   }
 }
 
