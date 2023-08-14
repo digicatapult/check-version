@@ -69,8 +69,11 @@ export async function checkVersion(
         })
         //newest tag
         newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
+        console.log(`in ` + newestTag)
       }
     })
+
+    console.log(`out` + newestTag)
 
     console.log(`sth`)
 
