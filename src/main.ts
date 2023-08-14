@@ -27,10 +27,10 @@ async function run(): Promise<void> {
     const myRepoURL = getRepoURL(context)
     console.log(`This repo's URL is: ${myRepoURL}`)
 
-    await getDiff().then(files => {
+    getReadme().then(files => {
       console.log(`
         Your files: \n
-        ${JSON.stringify(files, undefined, 2)}/n /n ${files?.length}`)
+        ${JSON.stringify(files, undefined, 2)}/`)
     })
 
     await checkVersion(location)
@@ -52,6 +52,19 @@ async function getDiff() {
     })
 
     return result.data[0].name || []
+  }
+}
+
+async function getReadme() {
+  if (ghToken && context.payload.pull_request) {
+    const octokit = getOctokit(ghToken)
+
+    const result = await octokit.rest.repos.getReadme({
+      repo: context.repo.repo,
+      owner: context.repo.owner
+    })
+
+    return result.data.name || []
   }
 }
 
