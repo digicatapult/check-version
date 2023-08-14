@@ -3,6 +3,7 @@ import {wait} from './wait'
 import {checkVersion} from './check-version'
 import {context, getOctokit} from '@actions/github'
 import * as semver from 'semver'
+import compareVersions from 'compare-versions'
 // const semverGt = require('semver/functions/gt');
 
 type GithubContext = typeof context
@@ -34,7 +35,8 @@ async function run(): Promise<void> {
         // filter out tags that don't look like releases
         const sortedTaggedVersions = tags
           .filter(t => t.name.match(/\d+.\d+.\d+/))
-          .sort((a, b) => Number(semver.gt(a.name, b.name)))
+          .sort((a, b) => semver.compare(a.name, b.name))
+        // const sortedTaggedVersions = taggedVersions.sort(semver.compare)
 
         sortedTaggedVersions.forEach(element => {
           console.log(`
