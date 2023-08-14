@@ -28,6 +28,9 @@ async function run(): Promise<void> {
     console.log(`This repo's URL is: ${myRepoURL}`)
 
     getDiff().then(files => {
+      ;`
+        Your files: \n
+        ${JSON.stringify(files, undefined, 2)}/n /n ${files?.length}`
       if (files) {
         files.forEach(element => {
           console.log(`
