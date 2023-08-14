@@ -39,12 +39,12 @@ export async function checkVersion(
     filepathsX = filtered.length
 
     //comparisons of versions
-    if (packageJson['version'] != packageLockJson['version']) {
-      throw new Error(`Inconsistent versions detected \n
-        PACKAGE_VERSION: ${packageJson['version']}\n
-        PACKAGE_LOCK_VERSION: ${packageLockJson['version']}
-        `)
-    }
+    // if (packageJson['version'] != packageLockJson['version']) {
+    //   throw new Error(`Inconsistent versions detected \n
+    //     PACKAGE_VERSION: ${packageJson['version']}\n
+    //     PACKAGE_LOCK_VERSION: ${packageLockJson['version']}
+    //     `)
+    // }
 
     // get tags and compare
     //processing tags
