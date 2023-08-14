@@ -86,10 +86,19 @@ export async function checkVersion(
     console.log(`sth`)
 
     //check if newest tag from repo is less than package
-    if (newestTag) {
-      let num = semver.compare(newestTag, packageJson['version'])
-      console.log(`comparison \n
-      ${num}`)
+    if (semver.compare(newestTag, packageJson['version']) == 1) {
+      // let num = semver.compare(newestTag, packageJson['version'])
+      console.log(
+        `Newest tag: ${newestTag} is a higher version than package.json: ${packageJson['version']}`
+      )
+    } else if (semver.compare(newestTag, packageJson['version']) == -1) {
+      console.log(
+        `Newest tag: ${newestTag} is a lower version than package.json: ${packageJson['version']} \n so we must be releasing new version`
+      )
+    } else if (semver.compare(newestTag, packageJson['version']) == 0) {
+      console.log(
+        `Newest tag: ${newestTag} is the same version as package.json: ${packageJson['version']} so no new version`
+      )
     } else {
       console.log(`no newest tag`)
     }
