@@ -63,6 +63,8 @@ export async function checkVersion(location: string, ghToken: string) {
       }
     })
 
+    console.log(`sth`)
+
     //check if newest tag from repo is less than package
     if (newestTag) {
       console.log('comparison')
