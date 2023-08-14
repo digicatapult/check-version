@@ -41,6 +41,8 @@ async function run(): Promise<void> {
         Your tag: \n
         ${JSON.stringify(element, undefined, 2)}`)
         })
+        //newest tag
+        console.log(`newest Tag: ${sortedTaggedVersions[0].name}`)
       }
     })
 
