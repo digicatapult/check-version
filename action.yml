@@ -25,7 +25,7 @@ inputs:
     default: 'default value if applicable'
 runs:
   using: 'node16'
-  main: 'lib/main.js'
+  main: 'dist/main.js'
   # steps:
   #   - run: echo some location ${{inputs.location}}
   #     shell: bash

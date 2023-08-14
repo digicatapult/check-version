@@ -55,7 +55,7 @@ async function getDiff() {
   }
 }
 
-async function getReadme() {
+async function getReadme(): Promise<string | never[] | undefined> {
   if (ghToken && context.payload.pull_request) {
     const octokit = getOctokit(ghToken)
 
