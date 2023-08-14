@@ -1,9 +1,9 @@
 import * as fs from 'fs/promises'
 
 export async function checkVersion(location: string) {
-  var filepathsX = 0
-  var packageJson: any
-  var packageLockJson: any
+  let filepathsX = 0
+  let packageJson: any
+  let packageLockJson: any
 
   try {
     //get all files in a location
