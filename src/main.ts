@@ -52,7 +52,7 @@ async function getTags() {
     })
     console.log(result)
 
-    return result.data[0].name || []
+    return result.data || []
   }
 }
 
