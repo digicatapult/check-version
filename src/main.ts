@@ -3,7 +3,6 @@ import {wait} from './wait'
 import {checkVersion} from './check-version'
 
 const ghToken: string = core.getInput('token')
-// const pr_number = core.getInput('pr_number')
 const ms: string = core.getInput('milliseconds')
 const location: string = core.getInput('location')
 
@@ -20,7 +19,6 @@ async function run(): Promise<void> {
     core.setOutput('time', new Date().toTimeString())
 
     await checkVersion(location, ghToken)
-    console.log(`after check version`)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
