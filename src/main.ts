@@ -56,7 +56,7 @@ async function getTags() {
 }
 
 async function getReadme(): Promise<string | never[] | undefined> {
-  if (ghToken && context.payload.pull_request) {
+  if (ghToken) {
     const octokit = getOctokit(ghToken)
 
     const result = await octokit.rest.repos.getReadme({
