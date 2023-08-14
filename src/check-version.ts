@@ -27,9 +27,9 @@ export async function checkVersion(location: string, ghToken: string) {
 
     //read and assign files
     for (const file of filtered) {
-      const filepath = await getFilePath(file, location)
+      // const filepath = await getFilePath(file, location)
 
-      const contents = await fs.readFile(filepath, 'utf8')
+      const contents = await fs.readFile(location + file, 'utf8')
       const jsonData = JSON.parse(contents)
       if (file.indexOf('lock') != -1) {
         packageJson = jsonData
@@ -61,7 +61,7 @@ export async function checkVersion(location: string, ghToken: string) {
     //newest tag from repo
     newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
 
-    //check if newest tag from repo is less than package
+    //assert comparisons to newest tag
     if (semver.compare(newestTag, packageJson['version']) == 1) {
       return core.setFailed(
         `Newest tag: ${newestTag} is a higher version than package.json: ${packageJson['version']}`
@@ -82,9 +82,9 @@ export async function checkVersion(location: string, ghToken: string) {
   }
 }
 
-async function getFilePath(file: string, location: string): Promise<string> {
-  return location + file
-}
+// async function getFilePath(file: string, location: string): Promise<string> {
+//   return location + file
+// }
 
 async function getTags(ghToken: string) {
   if (ghToken) {
