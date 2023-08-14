@@ -33,7 +33,7 @@ jobs:
           milliseconds: 1000
           # location: './__tests__/'
           location: ${{github.workspace}}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
+          # owner: ${{ github.repository_owner }}
+          # repo: ${{ github.event.repository.name }}
           token: ${{ secrets.GITHUB_TOKEN }}
           pr_number: 2

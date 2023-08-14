@@ -2,19 +2,17 @@ import * as core from '@actions/core'
 import {wait} from './wait'
 import {checkVersion} from './check-version'
 
-import {context} from '@actions/github'
+import {context, getOctokit} from '@actions/github'
 
 type GithubContext = typeof context
 
+const ghToken: string = core.getInput('token')
+const pr_number = core.getInput('pr_number')
+const ms: string = core.getInput('milliseconds')
+const location: string = core.getInput('location')
+
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    const location: string = core.getInput('location')
-    // const owner: string = core.getInput('owner')
-    // const repo: string = core.getInput('repo')
-    // const token: string = core.getInput('token')
-    // const pr_number = core.getInput('pr_number')
-
     console.log('heeelo')
 
     core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
@@ -29,6 +27,12 @@ async function run(): Promise<void> {
     const myRepoURL = getRepoURL(context)
     console.log(`This repo's URL is: ${myRepoURL}`)
 
+    getDiff().then(files => {
+      console.log(`
+      Your PR diff: \n
+      ${JSON.stringify(files, undefined, 2)}`)
+    })
+
     await checkVersion(location)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
@@ -37,6 +41,25 @@ async function run(): Promise<void> {
 
 function getRepoURL({repo, serverUrl}: GithubContext): string {
   return `${serverUrl}/${repo.owner}/${repo.repo}`
+}
+async function getDiff() {
+  if (ghToken && context.payload.pull_request) {
+    const octokit = getOctokit(ghToken)
+
+    const result = await octokit.rest.repos.listTags({
+      repo: context.repo.repo,
+      owner: context.repo.owner
+    })
+
+    // const result = await octokit.rest.repos.compareCommits({
+    //     repo: context.repo.repo,
+    //     owner:context.repo.owner,
+    //     head: context.payload.pull_request.head.sha,
+    //     base: context.payload.pull_request.base.sha,
+    //     page: 100
+    // })
+    return result || []
+  }
 }
 
 run()
