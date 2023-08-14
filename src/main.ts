@@ -27,19 +27,10 @@ async function run(): Promise<void> {
     const myRepoURL = getRepoURL(context)
     console.log(`This repo's URL is: ${myRepoURL}`)
 
-    getDiff().then(files => {
+    await getDiff().then(files => {
       console.log(`
         Your files: \n
         ${JSON.stringify(files, undefined, 2)}/n /n ${files?.length}`)
-      if (files) {
-        files.forEach(element => {
-          console.log(`
-
-
-        Your tags is: \n
-        ${JSON.stringify(element, undefined, 2)}`)
-        })
-      }
     })
 
     await checkVersion(location)
@@ -60,14 +51,7 @@ async function getDiff() {
       owner: context.repo.owner
     })
 
-    // const result = await octokit.rest.repos.compareCommits({
-    //     repo: context.repo.repo,
-    //     owner:context.repo.owner,
-    //     head: context.payload.pull_request.head.sha,
-    //     base: context.payload.pull_request.base.sha,
-    //     page: 100
-    // })
-    return result.data || []
+    return result.data[0].name || []
   }
 }
 
