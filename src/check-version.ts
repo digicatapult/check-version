@@ -1,9 +1,12 @@
 import * as fs from 'fs/promises'
+import {context, getOctokit} from '@actions/github'
+import * as semver from 'semver'
 
-export async function checkVersion(location: string) {
+export async function checkVersion(location: string, ghToken: string) {
   let filepathsX = 0
   let packageJson: any
   let packageLockJson: any
+  let newestTag: string | undefined = undefined
 
   try {
     //get all files in a location
@@ -37,14 +40,57 @@ export async function checkVersion(location: string) {
         PACKAGE_LOCK_VERSION: ${packageLockJson['version']}
         `)
     }
+
+    // get tags and compare
+    //processing tags
+    getTags(ghToken).then(tags => {
+      if (tags) {
+        // filter out tags that don't look like releases
+        const sortedTaggedVersions = tags
+          .filter(t => t.name.match(/\d+.\d+.\d+/))
+          .sort((a, b) => semver.compare(a.name, b.name))
+        // const sortedTaggedVersions = taggedVersions.sort(semver.compare)
+
+        sortedTaggedVersions.forEach(element => {
+          console.log(`
+        Your tag: \n
+        ${JSON.stringify(element, undefined, 2)}`)
+        })
+        //newest tag
+        newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
+        console.log(`Newest Tag: ${newestTag}`)
+        console.log(`Oldest Tag: ${sortedTaggedVersions[0].name}`)
+      }
+    })
+
+    //check if newest tag from repo is less than package
+    if (newestTag) {
+      console.log('comparison')
+      console.log(semver.compare(newestTag, packageJson['version']))
+    } else {
+      console.log(`no newest tag`)
+    }
   } catch (err) {
     console.error(err)
   }
-  console.log('package json version: ' + packageJson['version'])
-  console.log('package lock json version: ' + packageLockJson['version'])
+
   return filepathsX
 }
 
 async function getFilePath(file: string): Promise<string> {
   return './__tests__/' + file
+}
+
+async function getTags(ghToken: string) {
+  if (ghToken) {
+    const octokit = getOctokit(ghToken)
+
+    const result = await octokit.rest.repos.listTags({
+      repo: context.repo.repo,
+      owner: context.repo.owner
+    })
+    // console.log(result)
+
+    return result.data || []
+  }
 }
