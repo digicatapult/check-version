@@ -2,11 +2,13 @@ import * as core from '@actions/core'
 import {wait} from './wait'
 import {checkVersion} from './check-version'
 
+type TypeOfCore = typeof core
+
 const ghToken: string = core.getInput('token')
 const ms: string = core.getInput('milliseconds')
 const location: string = core.getInput('location')
 
-async function run(): Promise<void> {
+async function run(core: TypeOfCore): Promise<void> {
   try {
     core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
@@ -22,4 +24,4 @@ async function run(): Promise<void> {
   }
 }
 
-run()
+run(core)

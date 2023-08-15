@@ -3,8 +3,16 @@ import {context, getOctokit} from '@actions/github'
 import * as semver from 'semver'
 import * as core from '@actions/core'
 
+import {z} from 'zod'
+import {get} from 'http'
+import {GetFiles} from './getFiles'
+
+const packageParser = z.object({
+  version: z.string()
+})
+
 export async function checkVersion(location: string, ghToken: string) {
-  let packageJson: any
+  let packageJson: {version: string} | null = null
   let packageLockJson: any
   let newestTag: string | undefined = undefined
   let sortedTaggedVersions: {
@@ -17,13 +25,8 @@ export async function checkVersion(location: string, ghToken: string) {
 
   try {
     //get all files in a location
-    const files = await fs.readdir(location)
-
-    const filtered = files
-      .filter(function (str) {
-        return str.includes('package')
-      })
-      .sort()
+    const getFiles = new GetFiles(fs)
+    const filtered = await getFiles.getFiles(location)
 
     //read and assign files
     for (const file of filtered) {
@@ -32,10 +35,14 @@ export async function checkVersion(location: string, ghToken: string) {
       const contents = await fs.readFile(location + file, 'utf8')
       const jsonData = JSON.parse(contents)
       if (file.indexOf('lock') != -1) {
-        packageJson = jsonData
+        packageJson = packageParser.parse(jsonData)
       } else {
         packageLockJson = jsonData
       }
+    }
+
+    if (packageJson === null) {
+      return
     }
 
     //comparisons of versions - fail if not the same
