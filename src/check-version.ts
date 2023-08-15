@@ -4,24 +4,29 @@ import * as semver from 'semver'
 import * as core from '@actions/core'
 
 import {z} from 'zod'
-import {get} from 'http'
+
 import {GetFiles} from './getFiles'
+import {GetTags} from './getTags'
 
 const packageParser = z.object({
   version: z.string()
 })
+type tag = {
+  name: string
+  commit: {
+    sha: string
+    url: string
+  }
+  zipball_url: string
+  tarball_url: string
+  node_id: string
+}
 
 export async function checkVersion(location: string, ghToken: string) {
   let packageJson: {version: string} | null = null
   let packageLockJson: any
   let newestTag: string | undefined = undefined
-  let sortedTaggedVersions: {
-    name: string
-    commit: {sha: string; url: string}
-    zipball_url: string
-    tarball_url: string
-    node_id: string
-  }[] = []
+  let sortedTaggedVersions: tag[] = []
 
   try {
     //get all files in a location
@@ -42,28 +47,27 @@ export async function checkVersion(location: string, ghToken: string) {
     }
 
     if (packageJson === null) {
+      //change to set failed
       return
     }
 
-    //comparisons of versions - fail if not the same
+    //comparisons of versions in package and package-lock - fail if not the same
+    compareVersions(packageJson['version'], packageLockJson['version'])
     if (packageJson['version'] != packageLockJson['version']) {
-      return core.setFailed(`Inconsistent versions detected \n
-        PACKAGE_VERSION: ${packageJson['version']}\n
-        PACKAGE_LOCK_VERSION: ${packageLockJson['version']}
-        `)
     }
 
     //processing tags
-    await getTags(ghToken).then(tags => {
-      if (tags) {
-        // filter out tags that don't look like releases
-        const taggedVersions = tags
-          .filter(t => t.name.match(/\d+.\d+.\d+/))
-          .sort((a, b) => semver.compare(a.name, b.name))
+    const getTags = new GetTags(context, getOctokit)
+    const tags: tag[] = await getTags.getTagsFromGithub(ghToken)
 
-        sortedTaggedVersions = taggedVersions
-      }
-    })
+    if (tags) {
+      // filter out tags that don't look like releases
+      const taggedVersions = tags
+        .filter(t => t.name.match(/\d+.\d+.\d+/))
+        .sort((a, b) => semver.compare(a.name, b.name))
+
+      sortedTaggedVersions = taggedVersions
+    }
 
     //newest tag from repo
     newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
@@ -96,19 +100,18 @@ export async function checkVersion(location: string, ghToken: string) {
   }
 }
 
-// async function getFilePath(file: string, location: string): Promise<string> {
-//   return location + file
-// }
-
-async function getTags(ghToken: string) {
-  if (ghToken) {
-    const octokit = getOctokit(ghToken)
-
-    const result = await octokit.rest.repos.listTags({
-      repo: context.repo.repo,
-      owner: context.repo.owner
-    })
-
-    return result.data || []
+async function compareVersions(packageJson: string, packageLock: string) {
+  if (packageJson != packageLock) {
+    return core.setFailed(`Inconsistent versions detected \n
+      PACKAGE_VERSION: ${packageJson}\n
+      PACKAGE_LOCK_VERSION: ${packageLock}
+      `)
   }
+}
+
+async function filterTags(tags: tag[]) {
+  const taggedVersions = tags
+    .filter(t => t.name.match(/\d+.\d+.\d+/))
+    .sort((a, b) => semver.compare(a.name, b.name))
+  return taggedVersions
 }
