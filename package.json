@@ -6,7 +6,7 @@
   "main": "lib/main.js",
   "scripts": {
     "depcheck": "depcheck",
-    "build": "tsc --newLine lf",
+    "build": "tsc",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
