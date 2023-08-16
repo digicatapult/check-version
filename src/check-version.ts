@@ -7,6 +7,7 @@ import {z} from 'zod'
 
 import {GetFiles} from './getFiles'
 import {GetTags} from './getTags'
+import {CheckVersion} from './checkVersion_new'
 
 const packageParser = z.object({
   version: z.string()
@@ -48,11 +49,13 @@ export async function checkVersion(location: string, ghToken: string) {
 
     if (packageJson === null) {
       //change to set failed
+      core.setFailed('No package.json file found')
       return
     }
 
     //comparisons of versions in package and package-lock - fail if not the same
-    compareVersions(packageJson['version'], packageLockJson['version'])
+    const vCompare = new CheckVersion(core, fs)
+    vCompare.compareVersions(packageJson['version'], packageLockJson['version'])
     if (packageJson['version'] != packageLockJson['version']) {
     }
 
@@ -62,56 +65,40 @@ export async function checkVersion(location: string, ghToken: string) {
 
     if (tags) {
       // filter out tags that don't look like releases
-      const taggedVersions = tags
-        .filter(t => t.name.match(/\d+.\d+.\d+/))
-        .sort((a, b) => semver.compare(a.name, b.name))
-
-      sortedTaggedVersions = taggedVersions
+      sortedTaggedVersions = await vCompare.filterTags(tags)
     }
 
     //newest tag from repo
     newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
 
     //assert comparisons to newest tag
-    if (semver.compare(newestTag, packageJson['version']) == 1) {
-      core.setOutput('is_new_version', false)
-      core.setFailed(
-        `Newest tag: ${newestTag} is a higher version than package.json: ${packageJson['version']}`
-      )
-    } else if (semver.compare(newestTag, packageJson['version']) == -1) {
-      core.setOutput('version', packageJson['version'])
-      core.setOutput('is_new_version', true)
-      core.setOutput('build_date', new Date())
+    const isNewRelease: Promise<Boolean> = vCompare.assertComparisons(
+      newestTag,
+      packageJson['version']
+    )
+    //   if (semver.compare(newestTag, packageJson['version']) == 1) {
+    //     core.setOutput('is_new_version', false)
+    //     core.setFailed(
+    //       `Newest tag: ${newestTag} is a higher version than package.json: ${packageJson['version']}`
+    //     )
+    //   } else if (semver.compare(newestTag, packageJson['version']) == -1) {
+    //     core.setOutput('version', packageJson['version'])
+    //     core.setOutput('is_new_version', true)
+    //     core.setOutput('build_date', new Date())
 
-      console.log(
-        `Newest tag: ${newestTag} is a lower version than package.json: ${packageJson['version']} \n so we must be releasing new version`
-      )
-    } else if (semver.compare(newestTag, packageJson['version']) == 0) {
-      core.setOutput('is_new_version', false)
-      core.setOutput('is_prerelease', false)
-      core.setFailed(
-        `Newest tag: ${newestTag} is the same version as package.json: ${packageJson['version']} so not a new version`
-      )
-    } else {
-      core.setFailed(`no newest tag`)
-    }
+    //     console.log(
+    //       `Newest tag: ${newestTag} is a lower version than package.json: ${packageJson['version']} \n so we must be releasing new version`
+    //     )
+    //   } else if (semver.compare(newestTag, packageJson['version']) == 0) {
+    //     core.setOutput('is_new_version', false)
+    //     core.setOutput('is_prerelease', false)
+    //     core.setFailed(
+    //       `Newest tag: ${newestTag} is the same version as package.json: ${packageJson['version']} so not a new version`
+    //     )
+    //   } else {
+    //     core.setFailed(`no newest tag`)
+    //   }
   } catch (err) {
     console.error(err)
   }
-}
-
-async function compareVersions(packageJson: string, packageLock: string) {
-  if (packageJson != packageLock) {
-    return core.setFailed(`Inconsistent versions detected \n
-      PACKAGE_VERSION: ${packageJson}\n
-      PACKAGE_LOCK_VERSION: ${packageLock}
-      `)
-  }
-}
-
-async function filterTags(tags: tag[]) {
-  const taggedVersions = tags
-    .filter(t => t.name.match(/\d+.\d+.\d+/))
-    .sort((a, b) => semver.compare(a.name, b.name))
-  return taggedVersions
 }

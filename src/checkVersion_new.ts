@@ -39,4 +39,36 @@ export class CheckVersion {
       .sort((a, b) => semver.compare(a.name, b.name))
     return taggedVersions
   }
+
+  async assertComparisons(
+    newestGithubTag: string,
+    packageTag: string
+  ): Promise<Boolean> {
+    if (semver.compare(newestGithubTag, packageTag) == 1) {
+      this.core.setOutput('is_new_version', false)
+      this.core.setFailed(
+        `Newest tag: ${newestGithubTag} is a higher version than package.json: ${packageTag}`
+      )
+      return false
+    } else if (semver.compare(newestGithubTag, packageTag) == -1) {
+      this.core.setOutput('version', packageTag)
+      this.core.setOutput('is_new_version', true)
+      this.core.setOutput('build_date', new Date())
+
+      console.log(
+        `Newest tag: ${newestGithubTag} is a lower version than package.json: ${packageTag} \n so we must be releasing new version`
+      )
+      return true
+    } else if (semver.compare(newestGithubTag, packageTag) == 0) {
+      this.core.setOutput('is_new_version', false)
+      this.core.setOutput('is_prerelease', false)
+      this.core.setFailed(
+        `Newest tag: ${newestGithubTag} is the same version as package.json: ${packageTag} so not a new version`
+      )
+      return false
+    } else {
+      this.core.setFailed(`no newest tag`)
+      return false
+    }
+  }
 }

@@ -7,6 +7,17 @@ import * as core from '@actions/core'
 import {CheckVersion} from '../checkVersion_new'
 import {GetFiles} from '../getFiles'
 
+type tag = {
+  name: string
+  commit: {
+    sha: string
+    url: string
+  }
+  zipball_url: string
+  tarball_url: string
+  node_id: string
+}
+
 const pathLocation = 'path/to/thing'
 
 describe('checkVersion', function () {
@@ -55,7 +66,7 @@ describe('checkVersion', function () {
 
   test('compare versions failed stubx not called - not the same ', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
-    const readdirStub = sinon.stub(fs, 'readdir').resolves([])
+    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     const checkVersion = new CheckVersion(core, fs)
 
     await checkVersion.compareVersions('1.1.1', '2.1.1')
@@ -64,99 +75,120 @@ describe('checkVersion', function () {
     expect(setFailedStubx.calledOnce).to.equal(true)
   })
 
-  // test('filter through an array of tags and return sorted ones per semver rules', async function () {
-  //   const setFailedStubx = sinon.stub(core, 'setFailed')
-  //   const readdirStub = sinon.stub(fs, 'readdir').resolves([])
-  //   const checkVersion = new CheckVersion(core, fs)
+  test('filter through an array of tags and return sorted ones per semver rules', async function () {
+    // const setFailedStubx = sinon.stub(core, 'setFailed')
+    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
+    const checkVersion = new CheckVersion(core, fs)
 
-  //   const dummyData = [
-  //     {
-  //       name: '1.2.0',
-  //       commit: {
-  //         sha: '',
-  //         url: 'dummy.url'
-  //       },
-  //       zipball_url: 'dummy.url',
-  //       tarball_url: 'dummy.url',
-  //       node_id: 'dummy.url'
-  //     },
-  //     {
-  //       name: '0.2.0',
-  //       commit: {
-  //         sha: '',
-  //         url: 'dummy.url'
-  //       },
-  //       zipball_url: 'dummy.url',
-  //       tarball_url: 'dummy.url',
-  //       node_id: 'dummy.url'
-  //     },
-  //     {
-  //       name: '0.2.1',
-  //       commit: {
-  //         sha: '',
-  //         url: 'dummy.url'
-  //       },
-  //       zipball_url: 'dummy.url',
-  //       tarball_url: 'dummy.url',
-  //       node_id: 'dummy.url'
-  //     },
-  //     {
-  //       name: '0.0.0',
-  //       commit: {
-  //         sha: '',
-  //         url: 'dummy.url'
-  //       },
-  //       zipball_url: 'dummy.url',
-  //       tarball_url: 'dummy.url',
-  //       node_id: 'dummy.url'
-  //     }
-  //   ]
-  //   const expectedArray = [
-  //     {
-  //       name: '0.0.0',
-  //       commit: {
-  //         sha: '',
-  //         url: 'dummy.url'
-  //       },
-  //       zipball_url: 'dummy.url',
-  //       tarball_url: 'dummy.url',
-  //       node_id: 'dummy.url'
-  //     },
-  //     {
-  //       name: '0.2.0',
-  //       commit: {
-  //         sha: '',
-  //         url: 'dummy.url'
-  //       },
-  //       zipball_url: 'dummy.url',
-  //       tarball_url: 'dummy.url',
-  //       node_id: 'dummy.url'
-  //     },
-  //     {
-  //       name: '0.2.1',
-  //       commit: {
-  //         sha: '',
-  //         url: 'dummy.url'
-  //       },
-  //       zipball_url: 'dummy.url',
-  //       tarball_url: 'dummy.url',
-  //       node_id: 'dummy.url'
-  //     },
-  //     {
-  //       name: '1.2.0',
-  //       commit: {
-  //         sha: '',
-  //         url: 'dummy.url'
-  //       },
-  //       zipball_url: 'dummy.url',
-  //       tarball_url: 'dummy.url',
-  //       node_id: 'dummy.url'
-  //     }
-  //   ]
+    const dummyData = [
+      {
+        name: '1.2.0',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      },
+      {
+        name: 'hello',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      },
+      {
+        name: '0.2.0',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      },
+      {
+        name: '0.2.1',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      },
+      {
+        name: '0.0.0',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      },
+      {
+        name: 'goodbye',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      }
+    ]
+    const expectedArray = [
+      {
+        name: '0.0.0',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      },
+      {
+        name: '0.2.0',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      },
+      {
+        name: '0.2.1',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      },
+      {
+        name: '1.2.0',
+        commit: {
+          sha: '',
+          url: 'dummy.url'
+        },
+        zipball_url: 'dummy.url',
+        tarball_url: 'dummy.url',
+        node_id: 'dummy.url'
+      }
+    ]
 
-  //   const res = await checkVersion.filterTags(dummyData)
-  //   console.log('comparing')
+    const res: tag[] = await checkVersion.filterTags(dummyData)
+    console.log('comparing')
 
-  //   expect(res).to.equal(expectedArray)
-  // })
+    expect(res[res.length - 1].name).to.equal('1.2.0')
+    expect(res.length).to.equal(expectedArray.length)
+  })
 })
