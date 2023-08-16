@@ -59,20 +59,30 @@ export class CheckVersion {
       const getTags = new GetTags(context, getOctokit)
       const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
 
-      if (tags) {
+      if (tags.length > 0) {
         // filter out tags that don't look like releases
         sortedTaggedVersions = await this.filterTags(tags)
+
+        //newest tag from repo
+        newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
+
+        //assert comparisons to newest tag
+
+        const isNewVersion: Promise<Boolean> = this.assertComparisons(
+          newestTag,
+          packageLockJson['version']
+        )
+        return isNewVersion
+      } else {
+        this.core.setOutput('version', packageLockJson['version'])
+        this.core.setOutput('is_new_version', true)
+        this.core.setOutput('build_date', new Date())
+
+        console.log(
+          `There are no remote tags, your local version: ${packageLockJson['version']} seems to be the most recent.`
+        )
+        return true
       }
-
-      //newest tag from repo
-      newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
-
-      //assert comparisons to newest tag
-
-      const isNewVersion: Promise<Boolean> = this.assertComparisons(
-        newestTag,
-        packageLockJson['version']
-      )
     } catch (err) {
       console.error(err)
     }

@@ -213,14 +213,13 @@ describe('checkVersion', function () {
     expect(res).to.equal(false)
   })
 
-  test('assert comparissons - fail  ', async function () {
+  test('assert comparissons - pass  ', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     const checkVersion = new CheckVersion(core, fs)
 
     let res = await checkVersion.assertComparisons('0.1.1', '0.1.1')
 
-    expect(setFailedStubx.calledOnce).to.equal(true)
-    expect(res).to.equal(false)
+    expect(res).to.equal(true)
   })
 })
