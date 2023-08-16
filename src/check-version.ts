@@ -7,6 +7,7 @@ import {z} from 'zod'
 
 import {GetFiles} from './getFiles'
 import {GetTags} from './getTags'
+import {CheckVersion} from './checkVersion_new'
 
 const packageParser = z.object({
   version: z.string()
@@ -27,6 +28,7 @@ export async function checkVersion(location: string, ghToken: string) {
   let packageLockJson: any
   let newestTag: string | undefined = undefined
   let sortedTaggedVersions: Tag[] = []
+  const checkVersion = new CheckVersion(core, fs)
 
   try {
     //get all files in a location
@@ -52,22 +54,21 @@ export async function checkVersion(location: string, ghToken: string) {
     }
 
     //comparisons of versions in package and package-lock - fail if not the same
-    compareVersions(packageJson['version'], packageLockJson['version'])
-    if (packageJson['version'] != packageLockJson['version']) {
-    }
+    // compareVersions(packageJson['version'], packageLockJson['version'])
+    // if (packageJson['version'] != packageLockJson['version']) {
+    // }
+    checkVersion.compareVersions(
+      packageJson['version'],
+      packageLockJson['version']
+    )
 
     //processing tags
     const getTags = new GetTags(context, getOctokit)
     const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
-    console.log('tags' + tags)
 
     if (tags) {
       // filter out tags that don't look like releases
-      const taggedVersions = tags
-        .filter(t => t.name.match(/\d+.\d+.\d+/))
-        .sort((a, b) => semver.compare(a.name, b.name))
-
-      sortedTaggedVersions = taggedVersions
+      const sortedTaggedVersions = checkVersion.filterTags(tags)
     }
 
     //newest tag from repo
@@ -75,45 +76,27 @@ export async function checkVersion(location: string, ghToken: string) {
 
     //assert comparisons to newest tag
 
-    if (semver.compare(newestTag, packageJson['version']) == 1) {
-      core.setOutput('is_new_version', false)
-      core.setFailed(
-        `Newest tag: ${newestTag} is a higher version than package.json: ${packageJson['version']}`
-      )
-    } else if (semver.compare(newestTag, packageJson['version']) == -1) {
-      core.setOutput('version', packageJson['version'])
-      core.setOutput('is_new_version', true)
-      core.setOutput('build_date', new Date())
-
-      console.log(
-        `Newest tag: ${newestTag} is a lower version than package.json: ${packageJson['version']} \n so we must be releasing new version`
-      )
-    } else if (semver.compare(newestTag, packageJson['version']) == 0) {
-      core.setOutput('is_new_version', false)
-      core.setOutput('is_prerelease', false)
-      core.setFailed(
-        `Newest tag: ${newestTag} is the same version as package.json: ${packageJson['version']} so not a new version`
-      )
-    } else {
-      core.setFailed(`no newest tag`)
-    }
+    const isNewVersion: Promise<Boolean> = checkVersion.assertComparisons(
+      newestTag,
+      packageLockJson['version']
+    )
   } catch (err) {
     console.error(err)
   }
 }
 
-async function compareVersions(packageJson: string, packageLock: string) {
-  if (packageJson != packageLock) {
-    return core.setFailed(`Inconsistent versions detected \n
-      PACKAGE_VERSION: ${packageJson}\n
-      PACKAGE_LOCK_VERSION: ${packageLock}
-      `)
-  }
-}
+// async function compareVersions(packageJson: string, packageLock: string) {
+//   if (packageJson != packageLock) {
+//     return core.setFailed(`Inconsistent versions detected \n
+//       PACKAGE_VERSION: ${packageJson}\n
+//       PACKAGE_LOCK_VERSION: ${packageLock}
+//       `)
+//   }
+// }
 
-async function filterTags(tags: Tag[]) {
-  const taggedVersions = tags
-    .filter(t => t.name.match(/\d+.\d+.\d+/))
-    .sort((a, b) => semver.compare(a.name, b.name))
-  return taggedVersions
-}
+// async function filterTags(tags: Tag[]) {
+//   const taggedVersions = tags
+//     .filter(t => t.name.match(/\d+.\d+.\d+/))
+//     .sort((a, b) => semver.compare(a.name, b.name))
+//   return taggedVersions
+// }
