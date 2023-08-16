@@ -134,7 +134,7 @@ export class CheckVersion {
       console.log(
         `Newest tag: ${newestGithubTag} is the same version as package.json: ${packageTag} so not a new version`
       )
-      return false
+      return true
     } else {
       this.core.setFailed(`no newest tag`)
       return false
