@@ -10,11 +10,6 @@ inputs:
   token:
     description: 'The token to use to access the GitHub API'
     required: true
-
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
 outputs:
   is_new_version:
     description: 'boolean indicating if this is a new version true = yes '
