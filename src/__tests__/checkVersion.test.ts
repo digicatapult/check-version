@@ -186,7 +186,6 @@ describe('checkVersion', function () {
     ]
 
     const res: tag[] = await checkVersion.filterTags(dummyData)
-    console.log('comparing')
 
     expect(res[res.length - 1].name).to.equal('1.2.0')
     expect(res.length).to.equal(expectedArray.length)
@@ -198,7 +197,6 @@ describe('checkVersion', function () {
     const checkVersion = new CheckVersion(core, fs)
 
     let res = await checkVersion.assertComparisons('1.1.1', '2.1.1')
-    console.log('comparing')
 
     expect(setFailedStubx.calledOnce).to.equal(false)
     expect(res).to.equal(true)
@@ -210,7 +208,6 @@ describe('checkVersion', function () {
     const checkVersion = new CheckVersion(core, fs)
 
     let res = await checkVersion.assertComparisons('1.1.1', '0.1.1')
-    console.log('comparing')
 
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
@@ -222,7 +219,6 @@ describe('checkVersion', function () {
     const checkVersion = new CheckVersion(core, fs)
 
     let res = await checkVersion.assertComparisons('0.1.1', '0.1.1')
-    console.log('comparing')
 
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
