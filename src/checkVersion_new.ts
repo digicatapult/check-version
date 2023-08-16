@@ -61,7 +61,7 @@ export class CheckVersion {
 
       if (tags) {
         // filter out tags that don't look like releases
-        const sortedTaggedVersions = this.filterTags(tags)
+        sortedTaggedVersions = await this.filterTags(tags)
       }
 
       //newest tag from repo
