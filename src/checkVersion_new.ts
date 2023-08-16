@@ -121,7 +121,7 @@ export class CheckVersion {
     } else if (semver.compare(newestGithubTag, packageTag) == 0) {
       this.core.setOutput('is_new_version', false)
       this.core.setOutput('is_prerelease', false)
-      this.core.setFailed(
+      console.log(
         `Newest tag: ${newestGithubTag} is the same version as package.json: ${packageTag} so not a new version`
       )
       return false
