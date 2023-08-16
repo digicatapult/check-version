@@ -53,10 +53,6 @@ export async function checkVersion(location: string, ghToken: string) {
       return
     }
 
-    //comparisons of versions in package and package-lock - fail if not the same
-    // compareVersions(packageJson['version'], packageLockJson['version'])
-    // if (packageJson['version'] != packageLockJson['version']) {
-    // }
     checkVersion.compareVersions(
       packageJson['version'],
       packageLockJson['version']
@@ -84,19 +80,3 @@ export async function checkVersion(location: string, ghToken: string) {
     console.error(err)
   }
 }
-
-// async function compareVersions(packageJson: string, packageLock: string) {
-//   if (packageJson != packageLock) {
-//     return core.setFailed(`Inconsistent versions detected \n
-//       PACKAGE_VERSION: ${packageJson}\n
-//       PACKAGE_LOCK_VERSION: ${packageLock}
-//       `)
-//   }
-// }
-
-// async function filterTags(tags: Tag[]) {
-//   const taggedVersions = tags
-//     .filter(t => t.name.match(/\d+.\d+.\d+/))
-//     .sort((a, b) => semver.compare(a.name, b.name))
-//   return taggedVersions
-// }

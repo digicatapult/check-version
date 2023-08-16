@@ -1,8 +1,12 @@
 import * as ghCore from '@actions/core'
 import fsPromises from 'fs/promises'
 import * as semver from 'semver'
+import {GetFiles} from './getFiles'
+import {z} from 'zod'
+import {GetTags} from './getTags'
+import {context, getOctokit} from '@actions/github'
 
-type tag = {
+type Tag = {
   name: string
   commit: {
     sha: string
@@ -12,15 +16,65 @@ type tag = {
   tarball_url: string
   node_id: string
 }
+const packageParser = z.object({
+  version: z.string()
+})
 
 export class CheckVersion {
   constructor(private core: typeof ghCore, private fs: typeof fsPromises) {}
 
-  async check(location: string) {
-    const files = await this.fs.readdir(location)
+  async checkVersion(location: string, ghToken: string) {
+    let packageJson: {version: string} | null = null
+    let packageLockJson: any
+    let newestTag: string | undefined = undefined
+    let sortedTaggedVersions: Tag[] = []
+    // const checkVersion = new CheckVersion(this.core, this.fs)
 
-    if (files.indexOf('package.json') === -1) {
-      this.core.setFailed('something')
+    try {
+      //get all files in a location
+      const getFiles = new GetFiles(this.fs)
+      const filtered = await getFiles.getFiles(location)
+
+      //read and assign files
+      for (const file of filtered) {
+        // const filepath = await getFilePath(file, location)
+
+        const contents = await this.fs.readFile(location + file, 'utf8')
+        const jsonData = JSON.parse(contents)
+        if (file.indexOf('lock') != -1) {
+          packageJson = packageParser.parse(jsonData)
+        } else {
+          packageLockJson = packageParser.parse(jsonData)
+        }
+      }
+
+      if (packageJson === null) {
+        //change to set failed
+        return
+      }
+
+      this.compareVersions(packageJson['version'], packageLockJson['version'])
+
+      //processing tags
+      const getTags = new GetTags(context, getOctokit)
+      const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
+
+      if (tags) {
+        // filter out tags that don't look like releases
+        const sortedTaggedVersions = this.filterTags(tags)
+      }
+
+      //newest tag from repo
+      newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
+
+      //assert comparisons to newest tag
+
+      const isNewVersion: Promise<Boolean> = this.assertComparisons(
+        newestTag,
+        packageLockJson['version']
+      )
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -33,7 +87,7 @@ export class CheckVersion {
     }
   }
 
-  async filterTags(tags: tag[]) {
+  async filterTags(tags: Tag[]) {
     const taggedVersions = tags
       .filter(t => t.name.match(/\d+.\d+.\d+/))
       .sort((a, b) => semver.compare(a.name, b.name))

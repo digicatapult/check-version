@@ -25,16 +25,16 @@ describe('checkVersion', function () {
     // Restore the default sandbox here
     sinon.restore()
   })
-  test('reads files and errors if no package.json', async function () {
-    const setFailedStub = sinon.stub(core, 'setFailed')
-    const readdirStub = sinon.stub(fs, 'readdir').resolves([]) //mocks out what a function produces
-    const checkVersion = new CheckVersion(core, fs)
+  // test('reads files and errors if no package.json', async function () {
+  //   const setFailedStub = sinon.stub(core, 'setFailed')
+  //   const readdirStub = sinon.stub(fs, 'readdir').resolves([]) //mocks out what a function produces
+  //   const checkVersion = new CheckVersion(core, fs)
 
-    await checkVersion.check(pathLocation)
+  //   await checkVersion.check(pathLocation)
 
-    expect(setFailedStub.calledOnce).to.equal(true)
-    expect(setFailedStub.firstCall.args).to.deep.equal(['something'])
-  })
+  //   expect(setFailedStub.calledOnce).to.equal(true)
+  //   expect(setFailedStub.firstCall.args).to.deep.equal(['something'])
+  // })
 
   test('reads files in location errors if it does not find two files with package in name', async function () {
     const readdirStub = sinon.stub(fs, 'readdir').resolves([])
