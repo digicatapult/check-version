@@ -3,11 +3,10 @@ import {expect} from 'chai'
 import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
-
 import {CheckVersion} from '../checkVersion'
 import {GetFiles} from '../getFiles'
 
-type tag = {
+type Tag = {
   name: string
   commit: {
     sha: string
@@ -18,23 +17,11 @@ type tag = {
   node_id: string
 }
 
-const pathLocation = 'path/to/thing'
-
 describe('checkVersion', function () {
   afterEach(() => {
     // Restore the default sandbox here
     sinon.restore()
   })
-  // test('reads files and errors if no package.json', async function () {
-  //   const setFailedStub = sinon.stub(core, 'setFailed')
-  //   const readdirStub = sinon.stub(fs, 'readdir').resolves([]) //mocks out what a function produces
-  //   const checkVersion = new CheckVersion(core, fs)
-
-  //   await checkVersion.check(pathLocation)
-
-  //   expect(setFailedStub.calledOnce).to.equal(true)
-  //   expect(setFailedStub.firstCall.args).to.deep.equal(['something'])
-  // })
 
   test('reads files in location errors if it does not find two files with package in name', async function () {
     const readdirStub = sinon.stub(fs, 'readdir').resolves([])
@@ -51,33 +38,27 @@ describe('checkVersion', function () {
     expect(error).instanceOf(Error)
   })
 
-  //how do I do the opposite? - check that it returns an aray of 2 or sth?
-
   test('compare versions failed stubx not called - same', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     const checkVersion = new CheckVersion(core, fs)
 
     await checkVersion.compareVersions('1.1.1', '1.1.1')
-    console.log('comparing')
 
     expect(setFailedStubx.calledOnce).to.equal(false)
   })
 
   test('compare versions failed stubx not called - not the same ', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
-    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
+
     const checkVersion = new CheckVersion(core, fs)
 
     await checkVersion.compareVersions('1.1.1', '2.1.1')
-    console.log('comparing')
 
     expect(setFailedStubx.calledOnce).to.equal(true)
   })
 
   test('filter through an array of tags and return sorted ones per semver rules', async function () {
-    // const setFailedStubx = sinon.stub(core, 'setFailed')
-    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     const checkVersion = new CheckVersion(core, fs)
 
     const dummyData = [
@@ -185,7 +166,7 @@ describe('checkVersion', function () {
       }
     ]
 
-    const res: tag[] = await checkVersion.filterTags(dummyData)
+    const res: Tag[] = await checkVersion.filterTags(dummyData)
 
     expect(res[res.length - 1].name).to.equal('1.2.0')
     expect(res.length).to.equal(expectedArray.length)
@@ -193,7 +174,6 @@ describe('checkVersion', function () {
 
   test('assert comparissons - pass  ', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
-    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     const checkVersion = new CheckVersion(core, fs)
 
     let res = await checkVersion.assertComparisons('1.1.1', '2.1.1')
@@ -204,7 +184,6 @@ describe('checkVersion', function () {
 
   test('assert comparissons - fail  ', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
-    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     const checkVersion = new CheckVersion(core, fs)
 
     let res = await checkVersion.assertComparisons('1.1.1', '0.1.1')
@@ -215,7 +194,6 @@ describe('checkVersion', function () {
 
   test('assert comparissons - pass  ', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
-    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     const checkVersion = new CheckVersion(core, fs)
 
     let res = await checkVersion.assertComparisons('0.1.1', '0.1.1')
