@@ -47,4 +47,4 @@ jobs:
           echo "Skipping release as current version has already been published"
       - name: Testing new version got registered
         run: |
-          echo "print me bool: ${{steps.get_version.outputs.IS_NEW_VERSION}}"
+          echo "::print me bool: ${{steps.get_version.outputs.IS_NEW_VERSION}}"
