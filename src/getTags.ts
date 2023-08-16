@@ -26,7 +26,7 @@ export class GetTags {
           owner: this.ctx.repo.owner
         })
 
-        res.data = result
+        result = res.data
       }
     } catch (err) {
       console.log(err)

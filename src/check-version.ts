@@ -11,7 +11,7 @@ import {GetTags} from './getTags'
 const packageParser = z.object({
   version: z.string()
 })
-type tag = {
+type Tag = {
   name: string
   commit: {
     sha: string
@@ -26,7 +26,7 @@ export async function checkVersion(location: string, ghToken: string) {
   let packageJson: {version: string} | null = null
   let packageLockJson: any
   let newestTag: string | undefined = undefined
-  let sortedTaggedVersions: tag[] = []
+  let sortedTaggedVersions: Tag[] = []
 
   try {
     //get all files in a location
@@ -58,7 +58,8 @@ export async function checkVersion(location: string, ghToken: string) {
 
     //processing tags
     const getTags = new GetTags(context, getOctokit)
-    const tags: tag[] = await getTags.getTagsFromGithub(ghToken)
+    const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
+    console.log('tags' + tags)
 
     if (tags) {
       // filter out tags that don't look like releases
@@ -73,6 +74,7 @@ export async function checkVersion(location: string, ghToken: string) {
     newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
 
     //assert comparisons to newest tag
+
     if (semver.compare(newestTag, packageJson['version']) == 1) {
       core.setOutput('is_new_version', false)
       core.setFailed(
@@ -109,7 +111,7 @@ async function compareVersions(packageJson: string, packageLock: string) {
   }
 }
 
-async function filterTags(tags: tag[]) {
+async function filterTags(tags: Tag[]) {
   const taggedVersions = tags
     .filter(t => t.name.match(/\d+.\d+.\d+/))
     .sort((a, b) => semver.compare(a.name, b.name))
