@@ -1,5 +1,4 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
 import * as fs from 'fs/promises'
 import {CheckVersion} from './checkVersion_new'
 
