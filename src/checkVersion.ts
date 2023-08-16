@@ -79,7 +79,7 @@ export class CheckVersion {
         this.core.setOutput('build_date', new Date())
 
         console.log(
-          `There are no remote tags, your local version: ${packageLockJson['version']} seems to be the most recent.`
+          `There are no remote tags, your local version: ${packageLockJson['version']} is the most recent.`
         )
         return true
       }

@@ -4,7 +4,7 @@ import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
 
-import {CheckVersion} from '../checkVersion_new'
+import {CheckVersion} from '../checkVersion'
 import {GetFiles} from '../getFiles'
 
 type tag = {

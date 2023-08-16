@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as fs from 'fs/promises'
-import {CheckVersion} from './checkVersion_new'
+import {CheckVersion} from './checkVersion'
 
 type TypeOfCore = typeof core
 
