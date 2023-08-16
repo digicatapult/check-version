@@ -191,4 +191,40 @@ describe('checkVersion', function () {
     expect(res[res.length - 1].name).to.equal('1.2.0')
     expect(res.length).to.equal(expectedArray.length)
   })
+
+  test('assert comparissons - pass  ', async function () {
+    const setFailedStubx = sinon.stub(core, 'setFailed')
+    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
+    const checkVersion = new CheckVersion(core, fs)
+
+    let res = await checkVersion.assertComparisons('1.1.1', '2.1.1')
+    console.log('comparing')
+
+    expect(setFailedStubx.calledOnce).to.equal(false)
+    expect(res).to.equal(true)
+  })
+
+  test('assert comparissons - fail  ', async function () {
+    const setFailedStubx = sinon.stub(core, 'setFailed')
+    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
+    const checkVersion = new CheckVersion(core, fs)
+
+    let res = await checkVersion.assertComparisons('1.1.1', '0.1.1')
+    console.log('comparing')
+
+    expect(setFailedStubx.calledOnce).to.equal(true)
+    expect(res).to.equal(false)
+  })
+
+  test('assert comparissons - fail  ', async function () {
+    const setFailedStubx = sinon.stub(core, 'setFailed')
+    // const readdirStub = sinon.stub(fs, 'readdir').resolves([])
+    const checkVersion = new CheckVersion(core, fs)
+
+    let res = await checkVersion.assertComparisons('0.1.1', '0.1.1')
+    console.log('comparing')
+
+    expect(setFailedStubx.calledOnce).to.equal(true)
+    expect(res).to.equal(false)
+  })
 })

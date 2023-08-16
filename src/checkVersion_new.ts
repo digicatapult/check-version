@@ -88,16 +88,21 @@ export class CheckVersion {
   }
 
   async filterTags(tags: Tag[]) {
-    const taggedVersions = tags
-      .filter(t => t.name.match(/\d+.\d+.\d+/))
-      .sort((a, b) => semver.compare(a.name, b.name))
+    let taggedVersions: Tag[] = []
+    try {
+      taggedVersions = tags
+        .filter(t => t.name.match(/\d+.\d+.\d+/))
+        .sort((a, b) => semver.compare(a.name, b.name))
+    } catch (err) {
+      this.core.setFailed(`Error while filtering tags: ${err}`)
+    }
     return taggedVersions
   }
 
   async assertComparisons(
     newestGithubTag: string,
     packageTag: string
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     if (semver.compare(newestGithubTag, packageTag) == 1) {
       this.core.setOutput('is_new_version', false)
       this.core.setFailed(
