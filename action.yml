@@ -2,10 +2,23 @@ name: 'Your name here'
 description: 'Provide a description here'
 author: 'Your name or organization here'
 inputs:
-  milliseconds: # change this
+  npm_package_location:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'path to files'
+    default: './'
+  token:
+    description: 'The token to use to access the GitHub API'
+    required: true
+outputs:
+  is_new_version:
+    description: 'boolean indicating if this is a new version true = yes '
+  version:
+    description: 'current version'
+  build_date:
+    description: 'date of the build'
+  is_prerelease:
+    description: 'boolean indicating if this is a prerelease true = yes '
+
 runs:
   using: 'node16'
   main: 'dist/index.js'

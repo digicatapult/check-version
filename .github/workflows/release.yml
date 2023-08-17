@@ -1,8 +1,8 @@
-name: Lint and Test
+name: Release
 
 on:
   push:
-    branches-ignore: ['main']
+    branches: ['main']
 
 jobs:
   lint:
@@ -65,7 +65,7 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
-      - name: Build
+      - name: Build OpenAPI
         run: npm run build
       - name: Run tests
         run: npm run test
@@ -73,6 +73,11 @@ jobs:
   check-version:
     name: 'Check version'
     runs-on: ubuntu-latest
+    outputs:
+      is_new_version: ${{ steps.get_version.outputs.IS_NEW_VERSION }}
+      version: ${{ steps.get_version.outputs.VERSION }}
+      build_date: ${{ steps.get_version.outputs.BUILD_DATE }}
+      is_prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -92,3 +97,24 @@ jobs:
         with:
           npm_package_location: './'
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Skipping release as version has not increased
+        if: steps.get_version.outputs.IS_NEW_VERSION != 'true'
+        shell: bash
+        run: |
+          echo "Skipping release as current version has already been published"
+
+  publish:
+    name: 'Publish package'
+    needs: [lint, dependency-check, tests, check-version]
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-version.outputs.is_new_version == 'true' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - run: npm ci
+      - run: npm run build
+      - uses: JasonEtco/build-and-tag-action@v2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
