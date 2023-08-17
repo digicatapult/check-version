@@ -5,17 +5,7 @@ import fs from 'fs/promises'
 import * as core from '@actions/core'
 import {CheckVersion} from '../checkVersion'
 import {GetFiles} from '../getFiles'
-
-type Tag = {
-  name: string
-  commit: {
-    sha: string
-    url: string
-  }
-  zipball_url: string
-  tarball_url: string
-  node_id: string
-}
+import {dummyData, expectedArray, Tag, TestData} from './testData'
 
 describe('checkVersion', function () {
   afterEach(() => {
@@ -60,111 +50,7 @@ describe('checkVersion', function () {
 
   test('filter through an array of tags and return sorted ones per semver rules', async function () {
     const checkVersion = new CheckVersion(core, fs)
-
-    const dummyData = [
-      {
-        name: '1.2.0',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      },
-      {
-        name: 'hello',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      },
-      {
-        name: '0.2.0',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      },
-      {
-        name: '0.2.1',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      },
-      {
-        name: '0.0.0',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      },
-      {
-        name: 'goodbye',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      }
-    ]
-    const expectedArray = [
-      {
-        name: '0.0.0',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      },
-      {
-        name: '0.2.0',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      },
-      {
-        name: '0.2.1',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      },
-      {
-        name: '1.2.0',
-        commit: {
-          sha: '',
-          url: 'dummy.url'
-        },
-        zipball_url: 'dummy.url',
-        tarball_url: 'dummy.url',
-        node_id: 'dummy.url'
-      }
-    ]
+    const testData = new TestData()
 
     const res: Tag[] = await checkVersion.filterTags(dummyData)
 
