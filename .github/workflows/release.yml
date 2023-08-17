@@ -74,10 +74,10 @@ jobs:
     name: 'Check version'
     runs-on: ubuntu-latest
     outputs:
-      is_new_version: ${{ steps.get_version.outputs.IS_NEW_VERSION }}
-      version: ${{ steps.get_version.outputs.VERSION }}
-      build_date: ${{ steps.get_version.outputs.BUILD_DATE }}
-      is_prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE }}
+      is_new_version: ${{ steps.get_version.outputs.is_new_version }}
+      version: ${{ steps.get_version.outputs.version }}
+      build_date: ${{ steps.get_version.outputs.build_date }}
+      is_prerelease: ${{ steps.get_version.outputs.is_prerelease }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -98,7 +98,7 @@ jobs:
           npm_package_location: './'
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Skipping release as version has not increased
-        if: steps.get_version.outputs.IS_NEW_VERSION != 'true'
+        if: steps.get_version.outputs.is_new_version != 'true'
         shell: bash
         run: |
           echo "Skipping release as current version has already been published"
@@ -111,10 +111,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.release.tag_name }}
       - run: npm ci
-      - run: npm run build
+      - run:
+          npm run build
+          # Build github release
+      - name: Build release version
+        uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          automatic_release_tag: ${{ needs.check-version.outputs.version }}
+          prerelease: false
+          title: Release ${{ needs.check-version.outputs.version }}
       - uses: JasonEtco/build-and-tag-action@v2
         env:
           GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag_name: ${{ needs.check-version.outputs.version }}
