@@ -66,7 +66,7 @@ jobs:
       - name: Install Packages
         run: npm ci
       - name: Build OpenAPI
-        run: npm run build
+        run: npm run package
       - name: Run tests
         run: npm run test
 
@@ -85,7 +85,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build
-        run: npm run build
+        run: npm run package
       - name: Run my action
         id: get_version
         uses: ./
