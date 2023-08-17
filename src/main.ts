@@ -6,7 +6,7 @@ type TypeOfCore = typeof core
 
 const ghToken: string = core.getInput('token')
 const ms: string = core.getInput('milliseconds')
-const location: string = core.getInput('location')
+const location: string = core.getInput('npm_package_location')
 
 async function run(core: TypeOfCore): Promise<void> {
   try {
