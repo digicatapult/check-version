@@ -33,8 +33,7 @@ jobs:
 
       - name: Rebuild the dist/ directory
         run: |
-
-          npm run package
+          ncc build src/main.ts --license licenses.txt
 
       - name: Compare the expected and actual dist/ directories
         run: |
