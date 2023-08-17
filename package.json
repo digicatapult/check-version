@@ -1,9 +1,9 @@
 {
-  "name": "typescript-action",
-  "version": "0.0.0",
+  "name": "@digicatapult/check-version",
+  "version": "1.0.0",
   "private": true,
   "description": "TypeScript template action",
-  "main": "dist/main.js",
+  "main": "dist/index.js",
   "scripts": {
     "depcheck": "depcheck",
     "build": "ncc build --source-map --license licenses.txt ./src/main.ts ",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/digicatapult/check-version.git"
   },
   "keywords": [
     "actions",
