@@ -1,6 +1,6 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'check-version'
+description: 'Asserts that package-lock.json and package.json version is the same and that it is the same or higher than the latest published tag in repo.'
+author: 'Digital Catapult'
 inputs:
   npm_package_location:
     required: true
