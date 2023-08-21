@@ -1,6 +1,8 @@
 name: 'check-version-before-release'
-description: 'Asserts that package-lock.json and package.json version is the same and that it is the same or higher than the latest published tag in repo.'
+description: 'Asserts package version is the same or higher than latest published'
 author: 'Digital Catapult'
+icon: 'check-circle'
+color: 'red'
 inputs:
   npm_package_location:
     required: true
