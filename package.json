@@ -1,11 +1,11 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.js",
   "scripts": {
     "depcheck": "depcheck",
-    "build": "ncc build --source-map --license licenses.txt ./src/main.ts ",
+    "build": "ncc build  --license licenses.txt ./src/main.ts ",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
