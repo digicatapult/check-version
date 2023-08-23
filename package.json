@@ -21,7 +21,7 @@
     "setup"
   ],
   "author": "",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "semver": "^7.5.4",
     "zod": "^3.22.2"
