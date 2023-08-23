@@ -14,7 +14,6 @@ describe('checkVersion', function () {
   })
 
   test('reads files in location errors if it does not find two files with package in name', async function () {
-    const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     let error: Error | unknown = null
     try {
       const getFiles = new GetFiles(fs)
@@ -30,7 +29,6 @@ describe('checkVersion', function () {
 
   test('compare versions failed stubx not called - same', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
-    const readdirStub = sinon.stub(fs, 'readdir').resolves([])
     const checkVersion = new CheckVersion(core, fs)
 
     await checkVersion.compareVersions('1.1.1', '1.1.1')
@@ -50,7 +48,6 @@ describe('checkVersion', function () {
 
   test('filter through an array of tags and return sorted ones per semver rules', async function () {
     const checkVersion = new CheckVersion(core, fs)
-    const testData = new TestData()
 
     const res: Tag[] = await checkVersion.filterTags(dummyData)
 
@@ -58,7 +55,7 @@ describe('checkVersion', function () {
     expect(res.length).to.equal(expectedArray.length)
   })
 
-  test('assert comparissons - pass  ', async function () {
+  test('assert comparisons - pass  ', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     const checkVersion = new CheckVersion(core, fs)
 
@@ -68,7 +65,7 @@ describe('checkVersion', function () {
     expect(res).to.equal(true)
   })
 
-  test('assert comparissons - fail  ', async function () {
+  test('assert comparisons - fail  ', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     const checkVersion = new CheckVersion(core, fs)
 
@@ -78,12 +75,21 @@ describe('checkVersion', function () {
     expect(res).to.equal(false)
   })
 
-  test('assert comparissons - pass  ', async function () {
+  test('assert same version fails', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     const checkVersion = new CheckVersion(core, fs)
 
     let res = await checkVersion.assertComparisons('0.1.1', '0.1.1')
 
-    expect(res).to.equal(true)
+    expect(setFailedStubx.calledOnce).to.equal(true)
+    expect(res).to.equal(false)
   })
+})
+
+test('assert same version passes with failOnSameVersion false', async function () {
+  const checkVersion = new CheckVersion(core, fs)
+
+  let res = await checkVersion.assertComparisons('0.1.1', '0.1.1', false)
+
+  expect(res).to.equal(true)
 })

@@ -1,16 +1,21 @@
 name: 'check-version-before-release'
 description: 'Asserts package version is the same or higher than latest published'
 author: 'Digital Catapult'
-icon: 'check-circle'
-color: 'red'
+branding:
+  icon: 'check-circle'
+  color: 'red'
 inputs:
   npm_package_location:
-    required: true
+    required: false
     description: 'path to files'
     default: './'
   token:
     description: 'The token to use to access the GitHub API'
     required: true
+  fail_on_same_version:
+    description: 'Should action fail if the version matches the latest published'
+    required: false
+    default: 'true'
 outputs:
   is_new_version:
     description: 'boolean indicating if this is a new version true = yes '

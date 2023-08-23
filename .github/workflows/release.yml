@@ -95,7 +95,6 @@ jobs:
         id: get_version
         uses: ./
         with:
-          npm_package_location: './'
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Skipping release as version has not increased
         if: steps.get_version.outputs.is_new_version != 'true'

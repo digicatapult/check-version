@@ -23,12 +23,15 @@ const packageParser = z.object({
 export class CheckVersion {
   constructor(private core: typeof ghCore, private fs: typeof fsPromises) {}
 
-  async checkVersion(location: string, ghToken: string) {
+  async checkVersion(
+    location: string,
+    ghToken: string,
+    failOnSameVersion: boolean
+  ) {
     let packageJson: {version: string} | null = null
     let packageLockJson: any
     let newestTag: string | undefined = undefined
     let sortedTaggedVersions: Tag[] = []
-    // const checkVersion = new CheckVersion(this.core, this.fs)
 
     try {
       //get all files in a location
@@ -37,8 +40,6 @@ export class CheckVersion {
 
       //read and assign files
       for (const file of filtered) {
-        // const filepath = await getFilePath(file, location)
-
         const contents = await this.fs.readFile(location + file, 'utf8')
         const jsonData = JSON.parse(contents)
         if (file.indexOf('lock') != -1) {
@@ -70,7 +71,8 @@ export class CheckVersion {
 
         const isNewVersion: Promise<Boolean> = this.assertComparisons(
           newestTag,
-          packageLockJson['version']
+          packageLockJson['version'],
+          failOnSameVersion
         )
         return isNewVersion
       } else {
@@ -89,7 +91,7 @@ export class CheckVersion {
   }
 
   async compareVersions(packageJson: string, packageLock: string) {
-    if (packageJson != packageLock) {
+    if (packageJson !== packageLock) {
       this.core.setFailed(`Inconsistent versions detected \n
         PACKAGE_VERSION: ${packageJson}\n
         PACKAGE_LOCK_VERSION: ${packageLock}
@@ -111,15 +113,16 @@ export class CheckVersion {
 
   async assertComparisons(
     newestGithubTag: string,
-    packageTag: string
+    packageTag: string,
+    failOnSameVersion = true
   ): Promise<boolean> {
-    if (semver.compare(newestGithubTag, packageTag) == 1) {
+    if (semver.compare(newestGithubTag, packageTag) === 1) {
       this.core.setOutput('is_new_version', false)
       this.core.setFailed(
         `Newest tag: ${newestGithubTag} is a higher version than package.json: ${packageTag}`
       )
       return false
-    } else if (semver.compare(newestGithubTag, packageTag) == -1) {
+    } else if (semver.compare(newestGithubTag, packageTag) === -1) {
       this.core.setOutput('version', packageTag)
       this.core.setOutput('is_new_version', true)
       this.core.setOutput('build_date', new Date())
@@ -128,12 +131,18 @@ export class CheckVersion {
         `Newest tag: ${newestGithubTag} is a lower version than package.json: ${packageTag} \n so we must be releasing new version`
       )
       return true
-    } else if (semver.compare(newestGithubTag, packageTag) == 0) {
+    } else if (semver.compare(newestGithubTag, packageTag) === 0) {
       this.core.setOutput('is_new_version', false)
       this.core.setOutput('is_prerelease', false)
       console.log(
         `Newest tag: ${newestGithubTag} is the same version as package.json: ${packageTag} so not a new version`
       )
+
+      if (failOnSameVersion) {
+        this.core.setFailed(`Failing on same version`)
+        return false
+      }
+
       return true
     } else {
       this.core.setFailed(`no newest tag`)

@@ -90,5 +90,4 @@ jobs:
         id: get_version
         uses: ./
         with:
-          npm_package_location: './'
           token: ${{ secrets.GITHUB_TOKEN }}
