@@ -82,7 +82,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Node.js 16.x
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16.x
           cache: 'npm'
@@ -95,7 +95,6 @@ jobs:
         id: get_version
         uses: ./
         with:
-          npm_package_location: './'
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Skipping release as version has not increased
         if: steps.get_version.outputs.is_new_version != 'true'
@@ -110,7 +109,7 @@ jobs:
     if: ${{ needs.check-version.outputs.is_new_version == 'true' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - run: npm ci
       - run:
           npm run build
