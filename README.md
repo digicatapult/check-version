@@ -34,4 +34,6 @@ build_date:
     description: 'date of the build'
 is_prerelease:
     description: 'boolean indicating if this is a prerelease'
+npm_release_tag:
+    description: 'release tag for npm packages. `latest` or `next`'
 ```

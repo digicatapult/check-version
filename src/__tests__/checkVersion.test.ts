@@ -101,7 +101,7 @@ describe('checkVersion', function () {
     expect(setOutputStub.calledWithExactly('version', 'v1.1.1')).to.equal(true)
   })
 
-  test('assert is_prerelease output is true if `-` char present in version', async function () {
+  test('assert is_prerelease and npm_release_tag output if `-` char present in version', async function () {
     const checkVersion = new CheckVersion(core, fs)
     const setOutputStub = sinon.stub(core, 'setOutput')
 
@@ -109,9 +109,12 @@ describe('checkVersion', function () {
     expect(setOutputStub.calledWithExactly('is_prerelease', true)).to.equal(
       true
     )
+    expect(setOutputStub.calledWithExactly('npm_release_tag', 'next')).to.equal(
+      true
+    )
   })
 
-  test('assert is_prerelease output is false if - not present in version', async function () {
+  test('assert is_prerelease and npm_release_tag output if `-` char NOT in version', async function () {
     const checkVersion = new CheckVersion(core, fs)
     const setOutputStub = sinon.stub(core, 'setOutput')
 
@@ -119,5 +122,8 @@ describe('checkVersion', function () {
     expect(setOutputStub.calledWithExactly('is_prerelease', false)).to.equal(
       true
     )
+    expect(
+      setOutputStub.calledWithExactly('npm_release_tag', 'latest')
+    ).to.equal(true)
   })
 })
