@@ -25,6 +25,8 @@ outputs:
     description: 'date of the build'
   is_prerelease:
     description: 'boolean indicating if this is a prerelease true = yes '
+  npm_release_tag:
+    description: 'release tag for npm packages. `latest` or `next`'
 
 runs:
   using: 'node16'
