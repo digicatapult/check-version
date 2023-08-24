@@ -21,7 +21,10 @@ const packageParser = z.object({
 })
 
 export class CheckVersion {
-  constructor(private core: typeof ghCore, private fs: typeof fsPromises) {}
+  constructor(
+    private core: typeof ghCore,
+    private fs: typeof fsPromises
+  ) {}
 
   async checkVersion(
     location: string,
@@ -116,16 +119,19 @@ export class CheckVersion {
     packageTag: string,
     failOnSameVersion = true
   ): Promise<boolean> {
+    this.core.setOutput('build_date', new Date())
+    this.core.setOutput('version', `v${packageTag}`)
+    this.core.setOutput('is_prerelease', packageTag.includes('-'))
+
     if (semver.compare(newestGithubTag, packageTag) === 1) {
       this.core.setOutput('is_new_version', false)
+
       this.core.setFailed(
         `Newest tag: ${newestGithubTag} is a higher version than package.json: ${packageTag}`
       )
       return false
     } else if (semver.compare(newestGithubTag, packageTag) === -1) {
-      this.core.setOutput('version', packageTag)
       this.core.setOutput('is_new_version', true)
-      this.core.setOutput('build_date', new Date())
 
       console.log(
         `Newest tag: ${newestGithubTag} is a lower version than package.json: ${packageTag} \n so we must be releasing new version`
@@ -133,7 +139,7 @@ export class CheckVersion {
       return true
     } else if (semver.compare(newestGithubTag, packageTag) === 0) {
       this.core.setOutput('is_new_version', false)
-      this.core.setOutput('is_prerelease', false)
+
       console.log(
         `Newest tag: ${newestGithubTag} is the same version as package.json: ${packageTag} so not a new version`
       )

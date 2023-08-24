@@ -84,12 +84,40 @@ describe('checkVersion', function () {
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
   })
-})
 
-test('assert same version passes with failOnSameVersion false', async function () {
-  const checkVersion = new CheckVersion(core, fs)
+  test('assert same version passes with failOnSameVersion false', async function () {
+    const checkVersion = new CheckVersion(core, fs)
 
-  let res = await checkVersion.assertComparisons('0.1.1', '0.1.1', false)
+    let res = await checkVersion.assertComparisons('0.1.1', '0.1.1', false)
 
-  expect(res).to.equal(true)
+    expect(res).to.equal(true)
+  })
+
+  test('assert v is added to version output', async function () {
+    const checkVersion = new CheckVersion(core, fs)
+    const setOutputStub = sinon.stub(core, 'setOutput')
+
+    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1')
+    expect(setOutputStub.calledWithExactly('version', 'v1.1.1')).to.equal(true)
+  })
+
+  test('assert is_prerelease output is true if `-` char present in version', async function () {
+    const checkVersion = new CheckVersion(core, fs)
+    const setOutputStub = sinon.stub(core, 'setOutput')
+
+    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1-alpha')
+    expect(setOutputStub.calledWithExactly('is_prerelease', true)).to.equal(
+      true
+    )
+  })
+
+  test('assert is_prerelease output is false if - not present in version', async function () {
+    const checkVersion = new CheckVersion(core, fs)
+    const setOutputStub = sinon.stub(core, 'setOutput')
+
+    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1')
+    expect(setOutputStub.calledWithExactly('is_prerelease', false)).to.equal(
+      true
+    )
+  })
 })
