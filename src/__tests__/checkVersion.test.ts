@@ -3,8 +3,8 @@ import {expect} from 'chai'
 import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
-import {CheckVersion} from '../checkVersion'
-import {GetFiles} from '../getFiles'
+import {CheckVersion} from '../lib/checkVersion'
+import {GetFiles} from '../lib/getFiles'
 import {dummyData, expectedArray, Tag, TestData} from './testData'
 
 describe('checkVersion', function () {
