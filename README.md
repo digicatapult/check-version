@@ -22,6 +22,8 @@ with:
 | npm_package_location |    N     |  `./`   | If `package.json` and `package-lock.json` are not in the root directory, provide the correct path to their location. |
 | token                |    Y     |    -    | Provide `${{ secrets.GITHUB_TOKEN }}` so the action can access the GitHub API                                        |
 | fail_on_same_version |    N     | `true`  | Set whether the action should fail if the version exactly matches the latest published tag.                          |
+| manager              |    N     | `npm`  | Allows you to specify other package manager `cargo`.
+| names                |    N     | `true`  | Takes a package name. This is for mono repos mainly for `dscp-node`.                                        |
 
 ## This action produces these outputs:
 
