@@ -27,7 +27,7 @@ describe('checkVersion', function () {
     expect(error).instanceOf(Error)
   })
 
-  describe.only('if package manager is Cargo', () => {
+  describe('if package manager is Cargo', () => {
     test('scans and parses .toml files', async () => {
         const CV = new CheckVersion(core, fs)
         const res = await CV.checkVersion('./src/lib/Cargo/__tests__/__fixtures__/', '', true, 'cargo', ['node'])
