@@ -6,7 +6,7 @@ import {z} from 'zod'
 import {GetTags} from './getTags'
 import {context, getOctokit} from '@actions/github'
 import { ManagerType } from '../main'
-import Cargo from './Cargo'
+import Cargo, { AvailableCargos } from './Cargo'
 
 
 type Tag = {
@@ -33,14 +33,15 @@ export class CheckVersion {
     location: string,
     ghToken: string,
     failOnSameVersion: boolean,
-    manager: ManagerType = 'npm'
+    manager: ManagerType = 'npm',
+    names: AvailableCargos[] = ['node']
   ) {
 
     let newestTag: string | undefined = undefined
     let sortedTaggedVersions: Tag[] = []
 
     try {
-      const _version: string = await this.getVersion(manager, location) 
+      const _version: string = await this.getVersion(manager, location, names) 
       //processing tags
       const getTags = new GetTags(context, getOctokit)
       const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
@@ -74,21 +75,24 @@ export class CheckVersion {
     }
   }
 
-  getVersion(manager: ManagerType, location: string) {
-    if (manager === 'cargo') return this.handleCargo(location)
+  getVersion(manager: ManagerType, location: string, names: AvailableCargos[]) {
+    if (manager === 'cargo') return this.handleCargo(location, names)
     if (manager === 'npm') return this.handlePackageJson(location)
+
+    throw new Error(`unknown manager type - [${manager}]`)
   }
 
-  async handleCargo(location: string) {
-    const cargo: Cargo = new Cargo(this.core, this.fs)
-    const { version, ...rest} = await cargo.scan(location)
-    // { mainfile, all others}
+  async handleCargo(location: string, names: AvailableCargos[]) {
+    const cargo: Cargo = new Cargo(this.fs)
+    const result = await cargo.scan(location, names)
 
-    // TODO validtion here e.g. other dependencies
-
-    if (!version) return
-    return version
+    console.log({ result }, ' cargo')
+    // if single package result version
+    if (result) return result.version
+    
+    return result 
   }
+
   async handlePackageJson(location: string, packageJson: {version?: string} | null = null, packageLockJson: any = null) {
     const getFiles = new GetFiles(this.fs)
     const filtered = await getFiles.getFiles(location)

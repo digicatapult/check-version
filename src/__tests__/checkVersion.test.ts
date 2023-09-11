@@ -27,6 +27,31 @@ describe('checkVersion', function () {
     expect(error).instanceOf(Error)
   })
 
+  describe('if package manager is Cargo', () => {
+    // TODO assert for more! (integration) 
+    /*
+    describe('if scanning fails', () => {
+      it('does not attempt to read any files', () => {})
+      it('throws and does not catch', () => {})
+    })
+
+    describe('if reading file fails', () => {
+      it('throws and does not catch')
+    })
+
+    describe('if parsing fails', () => {
+      it('reads .toml')
+      it('parses .toml')
+      it('throws and does not catch')
+    })
+    */
+
+    it('scans and parses .toml files', async () => {
+        const CV = new CheckVersion(core, fs)
+        await CV.checkVersion('./src/lib/Cargo/__tests__/__fixtures__/', '', false, 'cargo', ['node'])
+    })
+  })
+
   test('compare versions failed stubx not called - same', async function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     const checkVersion = new CheckVersion(core, fs)
