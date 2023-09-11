@@ -53,8 +53,6 @@ export default class Cargo {
     if (packages?.length < 1) throw new Error('no packages found')
     if (packages?.length === 1) return packages[0]
 
-    console.log({ packages })
-
     return packages.reduce((out, next) => ({
       ...out,
       [next.name]: next
