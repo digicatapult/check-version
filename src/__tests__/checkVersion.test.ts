@@ -48,12 +48,7 @@ describe('checkVersion', function () {
         failOnSameVersion: false,
         manager: 'cargo',
       })
-      /*
-        location: string,
-        ghToken: string,
-        failOnSameVersion: boolean,
-        manager: ManagerType,
-      */
+      
       expect(res).to.be.undefined
     })
   })

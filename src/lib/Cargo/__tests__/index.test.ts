@@ -8,7 +8,7 @@ import fs from 'fs/promises'
 
 const location: string = './src/lib/Cargo/__tests__/__fixtures__/node'
 
-describe.only('Cargo class unit test suite', function () {
+describe('Cargo class unit test suite', function () {
   let readFileSpy: SinonSpy
   let tomlParseSpy: SinonSpy
   let getPackageDetailsSpy: SinonStub

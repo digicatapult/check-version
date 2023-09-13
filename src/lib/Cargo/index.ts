@@ -42,15 +42,6 @@ export default class Cargo {
    * @returns {Array} - of .toml files
    */
   async recursiveScan(dir: string): Promise<any> {
-    /* so can be used like ->
-    if (packages?.length < 1) throw new Error('no packages found')
-    if (packages?.length === 1) return packages[0]
-
-    return packages.reduce((out, next) => ({
-      ...out,
-      [next.name]: next
-    }), {})
-    */
     const dirs: Dirent[] = await this.fs.readdir(dir, { withFileTypes: true })
     const files: string[] = await Promise.all(dirs.map((dirent: any) =>
       dirent.isDirectory() ? this.recursiveScan(dirent) : dirent
