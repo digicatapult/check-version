@@ -14,6 +14,7 @@ type CargoPackage =  {
 }
 
 
+// TODO use implements Interface {}
 export default class Cargo {
   constructor(private fs: typeof fsPromises) {
     this.fs = fs
