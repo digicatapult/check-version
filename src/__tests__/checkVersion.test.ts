@@ -30,15 +30,30 @@ describe('checkVersion', function () {
   describe('if package manager is Cargo', () => {
     test('scans and parses .toml files', async () => {
         const CV = new CheckVersion(core, fs)
-        const res = await CV.checkVersion('./src/lib/Cargo/__tests__/__fixtures__/', '', true, 'cargo', ['node'])
+        const res = await CV.checkVersion({
+          location: './src/lib/Cargo/__tests__/__fixtures__/node',
+          ghToken: '',
+          failOnSameVersion: true,
+          manager: 'cargo',
+        })
 
         expect(res).to.be.equal(true)
     })
 
     test('returns undefined and does not set outputs if .toml file can not be found', async () => {
       const CV = new CheckVersion(core, fs)
-      const res = await CV.checkVersion('./', '', true, 'cargo', ['node'])
-
+      const res = await CV.checkVersion({
+        location: './',
+        ghToken: '',
+        failOnSameVersion: false,
+        manager: 'cargo',
+      })
+      /*
+        location: string,
+        ghToken: string,
+        failOnSameVersion: boolean,
+        manager: ManagerType,
+      */
       expect(res).to.be.undefined
     })
   })
