@@ -5,11 +5,12 @@ branding:
   icon: 'check-circle'
   color: 'red'
 inputs:
-  package_manager:
+  cargo_package_location:
     required: false
-    description: 'package manager to run against. currently supported: cargo, npm.'
-    default: 'npm'
-  package_location:
+    description: 'path to files'
+    default: './'
+  token:
+  npm_package_location:
     required: false
     description: 'path to files'
     default: './'
