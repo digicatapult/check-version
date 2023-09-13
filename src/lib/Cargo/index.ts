@@ -7,7 +7,7 @@ export type CargoPackages = {
   [key: string]: CargoPackage
 }
 
-type CargoPackage =  {
+export type CargoPackage =  {
   name: string,
   version: string,
   dependencies?: string[],

@@ -2,7 +2,7 @@ import {describe, test} from 'mocha'
 import {expect} from 'chai'
 import toml from 'toml'
 import sinon, { SinonSpy, SinonStub } from 'sinon'
-import Cargo from '../index'
+import Cargo, { CargoPackage } from '../index'
 import fs from 'fs/promises'
 
 
@@ -13,8 +13,8 @@ describe('Cargo class unit test suite', function () {
   let tomlParseSpy: SinonSpy
   let getPackageDetailsSpy: SinonStub
 
-  let cargo: any
-  let result: any
+  let cargo: Cargo
+  let result: CargoPackage
 
   afterEach(() => sinon.restore())
 
