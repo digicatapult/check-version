@@ -64,6 +64,4 @@ describe('Cargo class unit test suite', function () {
       })
     }) 
   })
-
-  describe('this.recursiveScan() method')
 })
