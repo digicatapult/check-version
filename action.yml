@@ -9,7 +9,6 @@ inputs:
     required: false
     description: 'path to files'
     default: './'
-  token:
   npm_package_location:
     required: false
     description: 'path to files'
