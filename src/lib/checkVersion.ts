@@ -45,7 +45,7 @@ export class CheckVersion {
     let sortedTaggedVersions: Tag[] = []
 
     try {
-      const _version: string = await this.getVersion(manager, location) 
+      const version: string = await this.getVersion(manager, location) 
       //processing tags
       const getTags = new GetTags(context, getOctokit)
       const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
@@ -60,17 +60,18 @@ export class CheckVersion {
         //assert comparisons to newest tag
         const isNewVersion: Promise<Boolean> = this.assertComparisons(
           newestTag,
-          _version,
-          failOnSameVersion
+          version,
+          failOnSameVersion,
+          manager,
         )
         return isNewVersion
       } else {
-        this.core.setOutput('version', _version)
+        this.core.setOutput('version', version)
         this.core.setOutput('is_new_version', true)
         this.core.setOutput('build_date', new Date())
 
         console.log(
-          `There are no remote tags, your local version: ${_version} is the most recent.`
+          `There are no remote tags, your local version: ${version} is the most recent.`
         )
         return true
       }
@@ -144,14 +145,18 @@ export class CheckVersion {
   async assertComparisons(
     newestGithubTag: string,
     packageTag: string,
-    failOnSameVersion = true
+    failOnSameVersion = true,
+    manager: ManagerType = 'npm'
   ): Promise<boolean> {
     const isPrerelease = packageTag.includes('-')
 
     this.core.setOutput('build_date', new Date())
     this.core.setOutput('version', `v${packageTag}`)
     this.core.setOutput('is_prerelease', isPrerelease)
-    this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
+    
+    if (manager === 'npm') {
+      this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
+    }
 
     if (semver.compare(newestGithubTag, packageTag) === 1) {
       this.core.setOutput('is_new_version', false)
