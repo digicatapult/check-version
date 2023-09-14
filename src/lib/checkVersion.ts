@@ -5,6 +5,9 @@ import {GetFiles} from './getFiles'
 import {z} from 'zod'
 import {GetTags} from './getTags'
 import {context, getOctokit} from '@actions/github'
+import { ManagerType } from '../main'
+import Cargo from './Cargo'
+
 
 type Tag = {
   name: string
@@ -26,39 +29,23 @@ export class CheckVersion {
     private fs: typeof fsPromises
   ) {}
 
-  async checkVersion(
+  async checkVersion({
+    location,
+    ghToken,
+    failOnSameVersion,
+    manager,
+  }: {
     location: string,
     ghToken: string,
-    failOnSameVersion: boolean
-  ) {
-    let packageJson: {version: string} | null = null
-    let packageLockJson: any
+    failOnSameVersion: boolean,
+    manager: ManagerType,
+  }) {
+
     let newestTag: string | undefined = undefined
     let sortedTaggedVersions: Tag[] = []
 
     try {
-      //get all files in a location
-      const getFiles = new GetFiles(this.fs)
-      const filtered = await getFiles.getFiles(location)
-
-      //read and assign files
-      for (const file of filtered) {
-        const contents = await this.fs.readFile(location + file, 'utf8')
-        const jsonData = JSON.parse(contents)
-        if (file.indexOf('lock') != -1) {
-          packageJson = packageParser.parse(jsonData)
-        } else {
-          packageLockJson = packageParser.parse(jsonData)
-        }
-      }
-
-      if (packageJson === null) {
-        //change to set failed
-        return
-      }
-
-      this.compareVersions(packageJson['version'], packageLockJson['version'])
-
+      const version: string = await this.getVersion(manager, location) 
       //processing tags
       const getTags = new GetTags(context, getOctokit)
       const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
@@ -71,20 +58,20 @@ export class CheckVersion {
         newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
 
         //assert comparisons to newest tag
-
         const isNewVersion: Promise<Boolean> = this.assertComparisons(
           newestTag,
-          packageLockJson['version'],
-          failOnSameVersion
+          version,
+          failOnSameVersion,
+          manager,
         )
         return isNewVersion
       } else {
-        this.core.setOutput('version', packageLockJson['version'])
+        this.core.setOutput('version', version)
         this.core.setOutput('is_new_version', true)
         this.core.setOutput('build_date', new Date())
 
         console.log(
-          `There are no remote tags, your local version: ${packageLockJson['version']} is the most recent.`
+          `There are no remote tags, your local version: ${version} is the most recent.`
         )
         return true
       }
@@ -93,7 +80,48 @@ export class CheckVersion {
     }
   }
 
-  async compareVersions(packageJson: string, packageLock: string) {
+  getVersion(manager: ManagerType, location: string) {
+    if (manager === 'cargo') return this.handleCargo(location)
+    if (manager === 'npm') return this.handlePackageJson(location)
+
+    throw new Error(`unknown manager type - [${manager}]`)
+  }
+
+  async handleCargo(location: string) {
+    const cargo: Cargo = new Cargo(this.fs)
+    const result = await cargo.scan(location)
+
+    if (result) return result.version
+    
+    return result 
+  }
+
+  async handlePackageJson(location: string, packageJson: {version?: string} | null = null, packageLockJson: any = null) {
+    const getFiles = new GetFiles(this.fs)
+    const filtered = await getFiles.getFiles(location)
+  
+    //read and assign files
+    for (const file of filtered) {
+      const contents = await this.fs.readFile(location + file, 'utf8')
+      const jsonData = JSON.parse(contents)
+      if (file.indexOf('lock') != -1) {
+        packageJson = packageParser.parse(jsonData)
+      } else {
+        packageLockJson = packageParser.parse(jsonData)
+      }
+    }
+  
+    if (packageJson === null) {
+      //change to set failed
+      return
+    }
+  
+    this.compareVersions(packageJson['version'] || '', packageLockJson['version'] || '')
+  
+    return packageLockJson['version'] 
+  }
+
+  async compareVersions(packageJson: string, packageLock: undefined | string) {
     if (packageJson !== packageLock) {
       this.core.setFailed(`Inconsistent versions detected \n
         PACKAGE_VERSION: ${packageJson}\n
@@ -117,14 +145,18 @@ export class CheckVersion {
   async assertComparisons(
     newestGithubTag: string,
     packageTag: string,
-    failOnSameVersion = true
+    failOnSameVersion = true,
+    manager: ManagerType = 'npm'
   ): Promise<boolean> {
     const isPrerelease = packageTag.includes('-')
 
     this.core.setOutput('build_date', new Date())
     this.core.setOutput('version', `v${packageTag}`)
     this.core.setOutput('is_prerelease', isPrerelease)
-    this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
+    
+    if (manager === 'npm') {
+      this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
+    }
 
     if (semver.compare(newestGithubTag, packageTag) === 1) {
       this.core.setOutput('is_new_version', false)

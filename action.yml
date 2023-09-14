@@ -5,6 +5,10 @@ branding:
   icon: 'check-circle'
   color: 'red'
 inputs:
+  cargo_package_location:
+    required: false
+    description: 'path to files'
+    default: './'
   npm_package_location:
     required: false
     description: 'path to files'
