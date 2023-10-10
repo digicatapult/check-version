@@ -1,12 +1,11 @@
 import * as ghCore from '@actions/core'
 import fsPromises from 'fs/promises'
 import * as semver from 'semver'
-import {GetFiles} from './getFiles'
-import {z} from 'zod'
 import {GetTags} from './getTags'
 import {context, getOctokit} from '@actions/github'
 import { ManagerType } from '../main'
 import Cargo from './Cargo'
+import NPMPackageHandler from './npm'
 
 
 type Tag = {
@@ -19,9 +18,6 @@ type Tag = {
   tarball_url: string
   node_id: string
 }
-const packageParser = z.object({
-  version: z.string()
-})
 
 export class CheckVersion {
   constructor(
@@ -96,29 +92,19 @@ export class CheckVersion {
     return result 
   }
 
-  async handlePackageJson(location: string, packageJson: {version?: string} | null = null, packageLockJson: any = null) {
-    const getFiles = new GetFiles(this.fs)
-    const filtered = await getFiles.getFiles(location)
+  async handlePackageJson(location: string) {
+const npmHandler = new NPMPackageHandler(this.fs)
+let versions = await npmHandler.scan(location)
   
-    //read and assign files
-    for (const file of filtered) {
-      const contents = await this.fs.readFile(location + file, 'utf8')
-      const jsonData = JSON.parse(contents)
-      if (file.indexOf('lock') != -1) {
-        packageJson = packageParser.parse(jsonData)
-      } else {
-        packageLockJson = packageParser.parse(jsonData)
-      }
+
+
+    if (!(versions['packageJsonLock']) || !(versions['packageJson'])){
+      this.core.setFailed(`No versions found for package or package-lock.`)
     }
   
-    if (packageJson === null) {
-      //change to set failed
-      return
-    }
+    this.compareVersions(versions['packageJson'] || '', versions['packageJsonLock'] || '')
   
-    this.compareVersions(packageJson['version'] || '', packageLockJson['version'] || '')
-  
-    return packageLockJson['version'] 
+    return versions['packageJsonLock'] 
   }
 
   async compareVersions(packageJson: string, packageLock: undefined | string) {
