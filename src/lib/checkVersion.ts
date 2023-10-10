@@ -3,10 +3,9 @@ import fsPromises from 'fs/promises'
 import * as semver from 'semver'
 import {GetTags} from './getTags'
 import {context, getOctokit} from '@actions/github'
-import { ManagerType } from '../main'
+import {ManagerType} from '../main'
 import Cargo from './Cargo'
 import NPMPackageHandler from './npm'
-
 
 type Tag = {
   name: string
@@ -29,19 +28,18 @@ export class CheckVersion {
     location,
     ghToken,
     failOnSameVersion,
-    manager,
+    manager
   }: {
-    location: string,
-    ghToken: string,
-    failOnSameVersion: boolean,
-    manager: ManagerType,
+    location: string
+    ghToken: string
+    failOnSameVersion: boolean
+    manager: ManagerType
   }) {
-
     let newestTag: string | undefined = undefined
     let sortedTaggedVersions: Tag[] = []
 
     try {
-      const version: string = await this.getVersion(manager, location) 
+      const version: string = await this.getVersion(manager, location)
       //processing tags
       const getTags = new GetTags(context, getOctokit)
       const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
@@ -58,7 +56,7 @@ export class CheckVersion {
           newestTag,
           version,
           failOnSameVersion,
-          manager,
+          manager
         )
         return isNewVersion
       } else {
@@ -88,32 +86,17 @@ export class CheckVersion {
     const result = await cargo.scan(location)
 
     if (result) return result.version
-    
-    return result 
+
+    return result
   }
 
   async handlePackageJson(location: string) {
-const npmHandler = new NPMPackageHandler(this.fs)
-let versions = await npmHandler.scan(location)
-  
+    const npmHandler = new NPMPackageHandler(this.fs, this.core)
+    const result = await npmHandler.scan(location)
 
+    if (result) return result
 
-    if (!(versions['packageJsonLock']) || !(versions['packageJson'])){
-      this.core.setFailed(`No versions found for package or package-lock.`)
-    }
-  
-    this.compareVersions(versions['packageJson'] || '', versions['packageJsonLock'] || '')
-  
-    return versions['packageJsonLock'] 
-  }
-
-  async compareVersions(packageJson: string, packageLock: undefined | string) {
-    if (packageJson !== packageLock) {
-      this.core.setFailed(`Inconsistent versions detected \n
-        PACKAGE_VERSION: ${packageJson}\n
-        PACKAGE_LOCK_VERSION: ${packageLock}
-        `)
-    }
+    return result
   }
 
   async filterTags(tags: Tag[]) {
@@ -139,7 +122,7 @@ let versions = await npmHandler.scan(location)
     this.core.setOutput('build_date', new Date())
     this.core.setOutput('version', `v${packageTag}`)
     this.core.setOutput('is_prerelease', isPrerelease)
-    
+
     if (manager === 'npm') {
       this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
     }
