@@ -39,7 +39,7 @@ export default class NPMPackageHandler {
     return versions['packageJsonLock']
   }
 
-  async compareVersions(packageJson: string, packageLock: undefined | string) {
+  async compareVersions(packageJson: string, packageLock: string) {
     if (packageJson !== packageLock) {
       this.core.setFailed(`Inconsistent versions detected \n
             PACKAGE_VERSION: ${packageJson}\n

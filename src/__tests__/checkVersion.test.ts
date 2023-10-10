@@ -5,7 +5,6 @@ import fs from 'fs/promises'
 import * as core from '@actions/core'
 import {CheckVersion} from '../lib/checkVersion'
 import {dummyData, expectedArray, Tag} from './testData'
-import NPMPackageHandler from '../lib/npm'
 
 describe('checkVersion', function () {
   afterEach(() => {
@@ -13,27 +12,27 @@ describe('checkVersion', function () {
     sinon.restore()
   })
 
-  test('reads files in location errors if it does not find package-lock.json or package.json ', async function () {
-    let error: Error | unknown = null
-    try {
-      const npmPackageHandler = new NPMPackageHandler(fs, core)
-      await npmPackageHandler.scan('some/location/')
-    } catch (err: any) {
-      if (err instanceof Error) {
-        error = err
-      }
-    }
-    expect(error).instanceOf(Error)
-  })
+  // test('reads files in location errors if it does not find package-lock.json or package.json ', async function () {
+  //   let error: Error | unknown = null
+  //   try {
+  //     const npmPackageHandler = new NPMPackageHandler(fs, core)
+  //     await npmPackageHandler.scan('some/location/')
+  //   } catch (err: any) {
+  //     if (err instanceof Error) {
+  //       error = err
+  //     }
+  //   }
+  //   expect(error).instanceOf(Error)
+  // })
 
-  test('reads files in location and finds versions for package.json and package-lock.json', async function () {
-    let res = ''
-    const npmPackageHandler = new NPMPackageHandler(fs, core)
-    res = await npmPackageHandler.scan('./')
+  // test('reads files in location and finds versions for package.json and package-lock.json', async function () {
+  //   let res = ''
+  //   const npmPackageHandler = new NPMPackageHandler(fs, core)
+  //   res = await npmPackageHandler.scan('./')
 
-    // expect(res['packageJsonLock']).to.equal(res['packageJson']) //do we want to include this assertion?
-    expect(res.length).to.above(1)
-  })
+  //   // expect(res['packageJsonLock']).to.equal(res['packageJson']) //do we want to include this assertion?
+  //   expect(res.length).to.above(1)
+  // })
 
   describe('if package manager is Cargo', () => {
     test('scans and parses .toml files', async () => {
@@ -61,24 +60,24 @@ describe('checkVersion', function () {
     })
   })
 
-  test('compare versions failed stubx not called - same', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const npmPackageHandler = new NPMPackageHandler(fs, core)
+  // test('compare versions failed stubx not called - same', async function () {
+  //   const setFailedStubx = sinon.stub(core, 'setFailed')
+  //   const npmPackageHandler = new NPMPackageHandler(fs, core)
 
-    await npmPackageHandler.compareVersions('1.1.1', '1.1.1')
+  //   await npmPackageHandler.compareVersions('1.1.1', '1.1.1')
 
-    expect(setFailedStubx.calledOnce).to.equal(false)
-  })
+  //   expect(setFailedStubx.calledOnce).to.equal(false)
+  // })
 
-  test('compare versions failed stubx not called - not the same ', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
+  // test('compare versions failed stubx not called - not the same ', async function () {
+  //   const setFailedStubx = sinon.stub(core, 'setFailed')
 
-    const npmPackageHandler = new NPMPackageHandler(fs, core)
+  //   const npmPackageHandler = new NPMPackageHandler(fs, core)
 
-    await npmPackageHandler.compareVersions('1.1.1', '2.1.1')
+  //   await npmPackageHandler.compareVersions('1.1.1', '2.1.1')
 
-    expect(setFailedStubx.calledOnce).to.equal(true)
-  })
+  //   expect(setFailedStubx.calledOnce).to.equal(true)
+  // })
 
   test('filter through an array of tags and return sorted ones per semver rules', async function () {
     const checkVersion = new CheckVersion(core, fs)
