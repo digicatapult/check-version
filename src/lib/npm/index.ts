@@ -24,7 +24,7 @@ export default class NPMPackageHandler {
             const contents = await this.fs.readFile(location + fileName, 'utf8')
             const jsonData = packageParser.parse(JSON.parse(contents))
             if (jsonData) {
-                fileName === 'package-lock' ?
+                fileName === 'package-lock.json' ?
                     versions['packageJsonLock'] = jsonData['version'] :
                     versions['packageJson'] = jsonData['version']
 

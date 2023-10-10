@@ -4,8 +4,8 @@ import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
 import {CheckVersion} from '../lib/checkVersion'
-import {GetFiles} from '../lib/getFiles'
-import {dummyData, expectedArray, Tag, TestData} from './testData'
+import {dummyData, expectedArray, Tag} from './testData'
+import NPMPackageHandler from '../lib/npm'
 
 describe('checkVersion', function () {
   afterEach(() => {
@@ -13,31 +13,40 @@ describe('checkVersion', function () {
     sinon.restore()
   })
 
-  test('reads files in location errors if it does not find two files with package in name', async function () {
+  test('reads files in location errors if it does not find package-lock.json or package.json ', async function () {
     let error: Error | unknown = null
     try {
-      const getFiles = new GetFiles(fs)
-      await getFiles.getFiles('some/location')
+      const npmPackageHandler = new NPMPackageHandler(fs)
+      await npmPackageHandler.scan('some/location/')
     } catch (err: any) {
       if (err instanceof Error) {
         error = err
       }
     }
-
     expect(error).instanceOf(Error)
+  })
+
+  test('reads files in location and finds versions for package.json and package-lock.json', async function () {
+    let res = {packageJson: '', packageJsonLock: ''}
+    const npmPackageHandler = new NPMPackageHandler(fs)
+    res = await npmPackageHandler.scan('./')
+
+    // expect(res['packageJsonLock']).to.equal(res['packageJson']) //do we want to include this assertion?
+    expect(res['packageJsonLock'].length).to.above(1)
+    expect(res['packageJson'].length).to.above(1)
   })
 
   describe('if package manager is Cargo', () => {
     test('scans and parses .toml files', async () => {
-        const CV = new CheckVersion(core, fs)
-        const res = await CV.checkVersion({
-          location: './src/lib/Cargo/__tests__/__fixtures__/node',
-          ghToken: '',
-          failOnSameVersion: true,
-          manager: 'cargo',
-        })
+      const CV = new CheckVersion(core, fs)
+      const res = await CV.checkVersion({
+        location: './src/lib/Cargo/__tests__/__fixtures__/node',
+        ghToken: '',
+        failOnSameVersion: true,
+        manager: 'cargo'
+      })
 
-        expect(res).to.be.equal(true)
+      expect(res).to.be.equal(true)
     })
 
     test('returns undefined and does not set outputs if .toml file can not be found', async () => {
@@ -46,9 +55,9 @@ describe('checkVersion', function () {
         location: './',
         ghToken: '',
         failOnSameVersion: false,
-        manager: 'cargo',
+        manager: 'cargo'
       })
-      
+
       expect(res).to.be.undefined
     })
   })
