@@ -9,7 +9,7 @@ export default class PoetryHandler {
   async scan(location: string) {
     const name = 'pyproject.toml'
     const contents: string = await this.fs.readFile(location + name, 'utf8')
-    const data = toml.parse(contents)
-    return data['tool']['poetry']['version']
+    const {dependencies, ...rest} = toml.parse(contents)
+    return rest.tool.poetry.version
   }
 }
