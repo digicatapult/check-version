@@ -14,9 +14,10 @@ The action then gets all tags, selects the newest one per semver rules and check
 with:
   npm_package_location: './' // optional
   cargo_package_location: './' // optional
+  poetry_package_location: './' // optional
   token: ${{ secrets.GITHUB_TOKEN }}
   fail_on_same_version: 'true' // optional
- ```
+```
 
 | input                  | required | default | description                                                                                                          |
 | :--------------------- | :------: | :-----: | :------------------------------------------------------------------------------------------------------------------- |

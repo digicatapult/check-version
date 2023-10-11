@@ -6,6 +6,7 @@ import {context, getOctokit} from '@actions/github'
 import {ManagerType} from '../main'
 import Cargo from './Cargo'
 import NPMPackageHandler from './npm'
+import PoetryHandler from './Poetry'
 
 type Tag = {
   name: string
@@ -77,6 +78,7 @@ export class CheckVersion {
   getVersion(manager: ManagerType, location: string) {
     if (manager === 'cargo') return this.handleCargo(location)
     if (manager === 'npm') return this.handlePackageJson(location)
+    if (manager === 'poetry') return this.handlePoetry(location)
 
     throw new Error(`unknown manager type - [${manager}]`)
   }
@@ -93,6 +95,14 @@ export class CheckVersion {
   async handlePackageJson(location: string) {
     const npmHandler = new NPMPackageHandler(this.fs, this.core)
     const result = await npmHandler.scan(location)
+
+    if (result) return result
+
+    return result
+  }
+  async handlePoetry(location: string) {
+    const poetryHandler = new PoetryHandler(this.fs)
+    const result = await poetryHandler.scan(location)
 
     if (result) return result
 

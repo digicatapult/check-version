@@ -13,6 +13,10 @@ inputs:
     required: false
     description: 'path to files'
     default: './'
+  poetry_package_location:
+    required: false
+    description: 'path to files'
+    default: './'
   token:
     description: 'The token to use to access the GitHub API'
     required: true
