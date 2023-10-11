@@ -4,8 +4,7 @@ import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
 import {CheckVersion} from '../lib/checkVersion'
-import {GetFiles} from '../lib/getFiles'
-import {dummyData, expectedArray, Tag, TestData} from './testData'
+import {dummyData, expectedArray, Tag} from './testData'
 
 describe('checkVersion', function () {
   afterEach(() => {
@@ -13,31 +12,17 @@ describe('checkVersion', function () {
     sinon.restore()
   })
 
-  test('reads files in location errors if it does not find two files with package in name', async function () {
-    let error: Error | unknown = null
-    try {
-      const getFiles = new GetFiles(fs)
-      await getFiles.getFiles('some/location')
-    } catch (err: any) {
-      if (err instanceof Error) {
-        error = err
-      }
-    }
-
-    expect(error).instanceOf(Error)
-  })
-
   describe('if package manager is Cargo', () => {
     test('scans and parses .toml files', async () => {
-        const CV = new CheckVersion(core, fs)
-        const res = await CV.checkVersion({
-          location: './src/lib/Cargo/__tests__/__fixtures__/node',
-          ghToken: '',
-          failOnSameVersion: true,
-          manager: 'cargo',
-        })
+      const CV = new CheckVersion(core, fs)
+      const res = await CV.checkVersion({
+        location: './src/lib/Cargo/__tests__/__fixtures__/node',
+        ghToken: '',
+        failOnSameVersion: true,
+        manager: 'cargo'
+      })
 
-        expect(res).to.be.equal(true)
+      expect(res).to.be.equal(true)
     })
 
     test('returns undefined and does not set outputs if .toml file can not be found', async () => {
@@ -46,30 +31,11 @@ describe('checkVersion', function () {
         location: './',
         ghToken: '',
         failOnSameVersion: false,
-        manager: 'cargo',
+        manager: 'cargo'
       })
-      
+
       expect(res).to.be.undefined
     })
-  })
-
-  test('compare versions failed stubx not called - same', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const checkVersion = new CheckVersion(core, fs)
-
-    await checkVersion.compareVersions('1.1.1', '1.1.1')
-
-    expect(setFailedStubx.calledOnce).to.equal(false)
-  })
-
-  test('compare versions failed stubx not called - not the same ', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-
-    const checkVersion = new CheckVersion(core, fs)
-
-    await checkVersion.compareVersions('1.1.1', '2.1.1')
-
-    expect(setFailedStubx.calledOnce).to.equal(true)
   })
 
   test('filter through an array of tags and return sorted ones per semver rules', async function () {

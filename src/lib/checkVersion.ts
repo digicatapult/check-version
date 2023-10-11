@@ -1,13 +1,11 @@
 import * as ghCore from '@actions/core'
 import fsPromises from 'fs/promises'
 import * as semver from 'semver'
-import {GetFiles} from './getFiles'
-import {z} from 'zod'
 import {GetTags} from './getTags'
 import {context, getOctokit} from '@actions/github'
-import { ManagerType } from '../main'
+import {ManagerType} from '../main'
 import Cargo from './Cargo'
-
+import NPMPackageHandler from './npm'
 
 type Tag = {
   name: string
@@ -19,9 +17,6 @@ type Tag = {
   tarball_url: string
   node_id: string
 }
-const packageParser = z.object({
-  version: z.string()
-})
 
 export class CheckVersion {
   constructor(
@@ -33,19 +28,18 @@ export class CheckVersion {
     location,
     ghToken,
     failOnSameVersion,
-    manager,
+    manager
   }: {
-    location: string,
-    ghToken: string,
-    failOnSameVersion: boolean,
-    manager: ManagerType,
+    location: string
+    ghToken: string
+    failOnSameVersion: boolean
+    manager: ManagerType
   }) {
-
     let newestTag: string | undefined = undefined
     let sortedTaggedVersions: Tag[] = []
 
     try {
-      const version: string = await this.getVersion(manager, location) 
+      const version: string = await this.getVersion(manager, location)
       //processing tags
       const getTags = new GetTags(context, getOctokit)
       const tags: Tag[] = await getTags.getTagsFromGithub(ghToken)
@@ -62,7 +56,7 @@ export class CheckVersion {
           newestTag,
           version,
           failOnSameVersion,
-          manager,
+          manager
         )
         return isNewVersion
       } else {
@@ -92,42 +86,17 @@ export class CheckVersion {
     const result = await cargo.scan(location)
 
     if (result) return result.version
-    
-    return result 
+
+    return result
   }
 
-  async handlePackageJson(location: string, packageJson: {version?: string} | null = null, packageLockJson: any = null) {
-    const getFiles = new GetFiles(this.fs)
-    const filtered = await getFiles.getFiles(location)
-  
-    //read and assign files
-    for (const file of filtered) {
-      const contents = await this.fs.readFile(location + file, 'utf8')
-      const jsonData = JSON.parse(contents)
-      if (file.indexOf('lock') != -1) {
-        packageJson = packageParser.parse(jsonData)
-      } else {
-        packageLockJson = packageParser.parse(jsonData)
-      }
-    }
-  
-    if (packageJson === null) {
-      //change to set failed
-      return
-    }
-  
-    this.compareVersions(packageJson['version'] || '', packageLockJson['version'] || '')
-  
-    return packageLockJson['version'] 
-  }
+  async handlePackageJson(location: string) {
+    const npmHandler = new NPMPackageHandler(this.fs, this.core)
+    const result = await npmHandler.scan(location)
 
-  async compareVersions(packageJson: string, packageLock: undefined | string) {
-    if (packageJson !== packageLock) {
-      this.core.setFailed(`Inconsistent versions detected \n
-        PACKAGE_VERSION: ${packageJson}\n
-        PACKAGE_LOCK_VERSION: ${packageLock}
-        `)
-    }
+    if (result) return result
+
+    return result
   }
 
   async filterTags(tags: Tag[]) {
@@ -153,7 +122,7 @@ export class CheckVersion {
     this.core.setOutput('build_date', new Date())
     this.core.setOutput('version', `v${packageTag}`)
     this.core.setOutput('is_prerelease', isPrerelease)
-    
+
     if (manager === 'npm') {
       this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
     }
