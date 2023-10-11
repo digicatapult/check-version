@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "soniclabs-configmanager"
+name = "some-name"
 version = "1.1.0"
 description = ""
-authors = ["Mark Rouse <mark.rouse@digicatapult.org.uk>"]
-license = "proprietary"
+authors = [""]
+license = "sth"
 readme = "README.md"
