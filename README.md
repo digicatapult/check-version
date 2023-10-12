@@ -22,7 +22,7 @@ with:
 
 | input                   | required | default | description                                                                                                      |
 | :---------------------- | :------: | :-----: | :--------------------------------------------------------------------------------------------------------------- |
-| package_manager         |    N     |  `npm`  | Provide a package manager as a string. 'npm' is default, other options: `cargo`,` `poetry``                      |
+| package_manager         |    N     |  `npm`  | Provide a package manager as a string. 'npm' is default, other options: `cargo`,` `poetry`                       |
 | npm_package_location    |    N     |  `./`   | If package.json and package-lock.json are not in the root directory, provide the correct path to their location. |
 | cargo_package_location  |    N     |  `./`   | Provide path to Cargo.toml file. Default is `./`                                                                 |
 | poetry_package_location |    N     |  `./`   | Provide path to pyproject.toml file. Default is `./`                                                             |
