@@ -12,20 +12,18 @@ The action then gets all tags, selects the newest one per semver rules and check
 
 ```
 with:
-  npm_package_location: './' // optional
-  cargo_package_location: './' // optional
-  poetry_package_location: './' // optional
+  package_manager: 'npm' // optional
+  location: './' // optional
   token: ${{ secrets.GITHUB_TOKEN }}
   fail_on_same_version: 'true' // optional
 ```
 
-| input                   | required | default | description                                                                                                          |
-| :---------------------- | :------: | :-----: | :------------------------------------------------------------------------------------------------------------------- |
-| npm_package_location    |    N     |  `./`   | If `package.json` and `package-lock.json` are not in the root directory, provide the correct path to their location. |
-| cargo_package_location  |    N     |  `./`   | If this defined it will assume that package manager is `cargo` .                                                     |
-| poetry_package_location |    N     |  `./`   | If this defined it will assume that package manager is `poetry` .                                                    |
-| token                   |    Y     |    -    | Provide `${{ secrets.GITHUB_TOKEN }}` so the action can access the GitHub API                                        |
-| fail_on_same_version    |    N     | `true`  | Set whether the action should fail if the version exactly matches the latest published tag.                          |
+| input                | required | default | description                                                                                 |
+| :------------------- | :------: | :-----: | :------------------------------------------------------------------------------------------ |
+| package_manager      |    N     |  `npm`  | Provide a package manager as a string. 'npm' is default, other options: `cargo`,` `poetry`` |
+| location             |    N     |  `./`   | Provide path to package/toml files. Default is `./`                                         |
+| token                |    Y     |    -    | Provide `${{ secrets.GITHUB_TOKEN }}` so the action can access the GitHub API               |
+| fail_on_same_version |    N     | `true`  | Set whether the action should fail if the version exactly matches the latest published tag. |
 
 ## This action produces these outputs:
 

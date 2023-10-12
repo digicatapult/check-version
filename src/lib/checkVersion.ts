@@ -3,7 +3,6 @@ import fsPromises from 'fs/promises'
 import * as semver from 'semver'
 import {GetTags} from './getTags'
 import {context, getOctokit} from '@actions/github'
-import {ManagerType} from '../main'
 import Cargo from './Cargo'
 import NPMPackageHandler from './npm'
 import PoetryHandler from './Poetry'
@@ -34,7 +33,7 @@ export class CheckVersion {
     location: string
     ghToken: string
     failOnSameVersion: boolean
-    manager: ManagerType
+    manager: string
   }) {
     let newestTag: string | undefined = undefined
     let sortedTaggedVersions: Tag[] = []
@@ -75,7 +74,7 @@ export class CheckVersion {
     }
   }
 
-  getVersion(manager: ManagerType, location: string) {
+  getVersion(manager: string, location: string) {
     switch (manager) {
       case 'cargo':
         return this.handleCargo(location)
@@ -126,7 +125,7 @@ export class CheckVersion {
     newestGithubTag: string,
     packageTag: string,
     failOnSameVersion = true,
-    manager: ManagerType = 'npm'
+    manager: string
   ): Promise<boolean> {
     const isPrerelease = packageTag.includes('-')
 
@@ -134,6 +133,7 @@ export class CheckVersion {
     this.core.setOutput('version', `v${packageTag}`)
     this.core.setOutput('is_prerelease', isPrerelease)
 
+    //what's the point of this?
     if (manager === 'npm') {
       this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
     }

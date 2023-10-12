@@ -5,17 +5,14 @@ branding:
   icon: 'check-circle'
   color: 'red'
 inputs:
-  cargo_package_location:
+packageManager:
+  package_manager:
+  description: 'specify package manager default npm (options: npm/cargo/poetry)'
     required: false
-    description: 'path to files'
-    default: './'
-  npm_package_location:
+    default: 'npm'
+  location: 
+    description: 'location of the packages/toml files'
     required: false
-    description: 'path to files'
-    default: './'
-  poetry_package_location:
-    required: false
-    description: 'path to files'
     default: './'
   token:
     description: 'The token to use to access the GitHub API'
