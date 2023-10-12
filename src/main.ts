@@ -11,6 +11,9 @@ const npmLocation: string = core.getInput('npm_package_location')
 const cargoLocation: string = core.getInput('cargo_package_location')
 const poetryLocation: string = core.getInput('poetry_package_location')
 const failOnSameVersion: string = core.getInput('fail_on_same_version')
+core.setFailed(
+  'npm' + npmLocation + 'cargo' + cargoLocation + 'poetry' + poetryLocation
+)
 const manager = npmLocation
   ? 'npm'
   : cargoLocation
