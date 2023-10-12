@@ -91,4 +91,3 @@ jobs:
         uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          npm_package_location: './'

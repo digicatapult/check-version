@@ -12,15 +12,16 @@ export const stringToBoolean = (input: string): boolean => {
 export async function assignManager(
   npmLocation: string,
   cargoLocation: string,
-  poetryLocation: string
+  poetryLocation: string,
+  packageManager: string
 ) {
-  if (npmLocation.length > 1) {
+  if (packageManager === 'npm') {
     return {location: npmLocation, manager: 'npm'}
   }
-  if (cargoLocation.length > 1) {
+  if (packageManager === 'cargo') {
     return {location: cargoLocation, manager: 'cargo'}
   }
-  if (poetryLocation.length > 1) {
+  if (packageManager === 'poetry') {
     return {location: poetryLocation, manager: 'poetry'}
   }
 }
