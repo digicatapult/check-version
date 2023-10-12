@@ -96,6 +96,7 @@ jobs:
         uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          npm_package_location: './'
       - name: Skipping release as version has not increased
         if: steps.get_version.outputs.is_new_version != 'true'
         shell: bash
