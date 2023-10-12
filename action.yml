@@ -5,12 +5,11 @@ branding:
   icon: 'check-circle'
   color: 'red'
 inputs:
-packageManager:
   package_manager:
-  description: 'specify package manager default npm (options: npm/cargo/poetry)'
+    description: 'specify package manager default npm (options: npm/cargo/poetry)'
     required: false
     default: 'npm'
-  location: 
+  location:
     description: 'location of the packages/toml files'
     required: false
     default: './'
