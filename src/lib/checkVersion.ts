@@ -133,7 +133,6 @@ export class CheckVersion {
     this.core.setOutput('version', `v${packageTag}`)
     this.core.setOutput('is_prerelease', isPrerelease)
 
-    //what's the point of this?
     if (manager === 'npm') {
       this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
     }
