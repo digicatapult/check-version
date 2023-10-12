@@ -4,27 +4,26 @@ import {CheckVersion} from './lib/checkVersion'
 import {stringToBoolean} from './util'
 
 type TypeOfCore = typeof core
-export type ManagerType = 'npm' | 'cargo' | 'poetry'
+export type ManagerType = 'npm' | 'cargo' | 'poetry' | undefined
 
 const ghToken: string = core.getInput('token')
 const npmLocation: string = core.getInput('npm_package_location')
 const cargoLocation: string = core.getInput('cargo_package_location')
 const poetryLocation: string = core.getInput('poetry_package_location')
 const failOnSameVersion: string = core.getInput('fail_on_same_version')
-//there must be a more elegant way to assign this
-let manager: ManagerType
-if (npmLocation) {
-  manager = 'npm'
-}
-if (cargoLocation) {
-  manager = 'cargo'
-}
-if (poetryLocation) {
-  manager = 'poetry'
-}
+const manager = npmLocation
+  ? 'npm'
+  : cargoLocation
+  ? 'cargo'
+  : poetryLocation
+  ? 'poetry'
+  : undefined
 
 async function run(core: TypeOfCore): Promise<void> {
   try {
+    if (manager == undefined) {
+      core.setFailed(`Manager is undefined`)
+    }
     const checkVersion = new CheckVersion(core, fs)
     await checkVersion.checkVersion({
       location: npmLocation || cargoLocation || poetryLocation,
