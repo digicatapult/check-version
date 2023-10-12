@@ -76,11 +76,16 @@ export class CheckVersion {
   }
 
   getVersion(manager: ManagerType, location: string) {
-    if (manager === 'cargo') return this.handleCargo(location)
-    if (manager === 'npm') return this.handlePackageJson(location)
-    if (manager === 'poetry') return this.handlePoetry(location)
-
-    throw new Error(`unknown manager type - [${manager}]`)
+    switch (manager) {
+      case 'cargo':
+        return this.handleCargo(location)
+      case 'npm':
+        return this.handlePackageJson(location)
+      case 'poetry':
+        return this.handlePoetry(location)
+      default:
+        throw new Error(`unknown manager type - [${manager}]`)
+    }
   }
 
   async handleCargo(location: string) {
