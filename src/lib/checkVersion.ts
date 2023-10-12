@@ -101,15 +101,11 @@ export class CheckVersion {
     const npmHandler = new NPMPackageHandler(this.fs, this.core)
     const result = await npmHandler.scan(location)
 
-    if (result) return result
-
     return result
   }
   async handlePoetry(location: string) {
     const poetryHandler = new PoetryHandler(this.fs)
     const result = await poetryHandler.scan(location)
-
-    if (result) return result
 
     return result
   }
