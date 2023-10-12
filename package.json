@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.1.42",
+  "version": "1.2.0",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.js",
   "scripts": {

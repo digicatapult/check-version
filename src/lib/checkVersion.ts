@@ -3,9 +3,9 @@ import fsPromises from 'fs/promises'
 import * as semver from 'semver'
 import {GetTags} from './getTags'
 import {context, getOctokit} from '@actions/github'
-import {ManagerType} from '../main'
 import Cargo from './Cargo'
 import NPMPackageHandler from './npm'
+import PoetryHandler from './Poetry'
 
 type Tag = {
   name: string
@@ -33,7 +33,7 @@ export class CheckVersion {
     location: string
     ghToken: string
     failOnSameVersion: boolean
-    manager: ManagerType
+    manager: string
   }) {
     let newestTag: string | undefined = undefined
     let sortedTaggedVersions: Tag[] = []
@@ -74,11 +74,17 @@ export class CheckVersion {
     }
   }
 
-  getVersion(manager: ManagerType, location: string) {
-    if (manager === 'cargo') return this.handleCargo(location)
-    if (manager === 'npm') return this.handlePackageJson(location)
-
-    throw new Error(`unknown manager type - [${manager}]`)
+  getVersion(manager: string, location: string) {
+    switch (manager) {
+      case 'cargo':
+        return this.handleCargo(location)
+      case 'npm':
+        return this.handlePackageJson(location)
+      case 'poetry':
+        return this.handlePoetry(location)
+      default:
+        throw new Error(`unknown manager type - [${manager}]`)
+    }
   }
 
   async handleCargo(location: string) {
@@ -94,7 +100,11 @@ export class CheckVersion {
     const npmHandler = new NPMPackageHandler(this.fs, this.core)
     const result = await npmHandler.scan(location)
 
-    if (result) return result
+    return result
+  }
+  async handlePoetry(location: string) {
+    const poetryHandler = new PoetryHandler(this.fs)
+    const result = await poetryHandler.scan(location)
 
     return result
   }
@@ -115,7 +125,7 @@ export class CheckVersion {
     newestGithubTag: string,
     packageTag: string,
     failOnSameVersion = true,
-    manager: ManagerType = 'npm'
+    manager: string
   ): Promise<boolean> {
     const isPrerelease = packageTag.includes('-')
 

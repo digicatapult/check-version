@@ -51,7 +51,12 @@ describe('checkVersion', function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     const checkVersion = new CheckVersion(core, fs)
 
-    let res = await checkVersion.assertComparisons('1.1.1', '2.1.1')
+    let res = await checkVersion.assertComparisons(
+      '1.1.1',
+      '2.1.1',
+      true,
+      'npm'
+    )
 
     expect(setFailedStubx.calledOnce).to.equal(false)
     expect(res).to.equal(true)
@@ -61,7 +66,12 @@ describe('checkVersion', function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     const checkVersion = new CheckVersion(core, fs)
 
-    let res = await checkVersion.assertComparisons('1.1.1', '0.1.1')
+    let res = await checkVersion.assertComparisons(
+      '1.1.1',
+      '0.1.1',
+      true,
+      'npm'
+    )
 
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
@@ -71,7 +81,12 @@ describe('checkVersion', function () {
     const setFailedStubx = sinon.stub(core, 'setFailed')
     const checkVersion = new CheckVersion(core, fs)
 
-    let res = await checkVersion.assertComparisons('0.1.1', '0.1.1')
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '0.1.1',
+      true,
+      'npm'
+    )
 
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
@@ -80,7 +95,12 @@ describe('checkVersion', function () {
   test('assert same version passes with failOnSameVersion false', async function () {
     const checkVersion = new CheckVersion(core, fs)
 
-    let res = await checkVersion.assertComparisons('0.1.1', '0.1.1', false)
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '0.1.1',
+      false,
+      'npm'
+    )
 
     expect(res).to.equal(true)
   })
@@ -89,7 +109,12 @@ describe('checkVersion', function () {
     const checkVersion = new CheckVersion(core, fs)
     const setOutputStub = sinon.stub(core, 'setOutput')
 
-    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1')
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '1.1.1',
+      true,
+      'npm'
+    )
     expect(setOutputStub.calledWithExactly('version', 'v1.1.1')).to.equal(true)
   })
 
@@ -97,7 +122,12 @@ describe('checkVersion', function () {
     const checkVersion = new CheckVersion(core, fs)
     const setOutputStub = sinon.stub(core, 'setOutput')
 
-    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1-alpha')
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '1.1.1-alpha',
+      true,
+      'npm'
+    )
     expect(setOutputStub.calledWithExactly('is_prerelease', true)).to.equal(
       true
     )
@@ -110,7 +140,12 @@ describe('checkVersion', function () {
     const checkVersion = new CheckVersion(core, fs)
     const setOutputStub = sinon.stub(core, 'setOutput')
 
-    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1')
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '1.1.1',
+      true,
+      'npm'
+    )
     expect(setOutputStub.calledWithExactly('is_prerelease', false)).to.equal(
       true
     )
