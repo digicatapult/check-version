@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "@actions/core": "^1.10.1",
     "@actions/github": "^6.0.0",
     "@tsconfig/node12": "^12.1.0",
-    "@types/chai": "^4.3.6",
+    "@types/chai": "^4.3.7",
     "@types/mocha": "^10.0.2",
     "@types/node": "^20.8.4",
     "@types/semver": "^7.5.3",
