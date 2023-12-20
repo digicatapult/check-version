@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.2.29",
+  "version": "1.2.30",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.js",
   "scripts": {
@@ -33,7 +33,7 @@
     "@tsconfig/node12": "^12.1.0",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.10.5",
     "@types/semver": "^7.5.6",
     "@types/sinon": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
