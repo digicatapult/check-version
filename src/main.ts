@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as fs from 'fs/promises'
-import {CheckVersion} from './lib/checkVersion'
-import {assignManager, stringToBoolean} from './util'
+import {CheckVersion} from './lib/checkVersion.js'
+import {assignManager, stringToBoolean} from './util.js'
 
 type TypeOfCore = typeof core
 

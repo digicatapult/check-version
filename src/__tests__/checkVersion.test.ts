@@ -3,8 +3,9 @@ import {expect} from 'chai'
 import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
-import {CheckVersion} from '../lib/checkVersion'
-import {dummyData, expectedArray, Tag} from './testData'
+
+import {CheckVersion} from '../lib/checkVersion.js'
+import {dummyData, expectedArray, Tag} from './testData.js'
 
 describe('checkVersion', function () {
   afterEach(() => {
@@ -48,8 +49,9 @@ describe('checkVersion', function () {
   })
 
   test('assert comparisons - pass  ', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const checkVersion = new CheckVersion(core, fs)
+    const mock = {...core}
+    const setFailedStubx = sinon.stub(mock, 'setFailed')
+    const checkVersion = new CheckVersion(mock, fs)
 
     let res = await checkVersion.assertComparisons(
       '1.1.1',
@@ -63,8 +65,9 @@ describe('checkVersion', function () {
   })
 
   test('assert comparisons - fail  ', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const checkVersion = new CheckVersion(core, fs)
+    const mock = {...core}
+    const setFailedStubx = sinon.stub(mock, 'setFailed')
+    const checkVersion = new CheckVersion(mock, fs)
 
     let res = await checkVersion.assertComparisons(
       '1.1.1',
@@ -78,8 +81,9 @@ describe('checkVersion', function () {
   })
 
   test('assert same version fails', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const checkVersion = new CheckVersion(core, fs)
+    const mock = {...core}
+    const setFailedStubx = sinon.stub(mock, 'setFailed')
+    const checkVersion = new CheckVersion(mock, fs)
 
     let res = await checkVersion.assertComparisons(
       '0.1.1',
@@ -106,8 +110,9 @@ describe('checkVersion', function () {
   })
 
   test('assert v is added to version output', async function () {
-    const checkVersion = new CheckVersion(core, fs)
-    const setOutputStub = sinon.stub(core, 'setOutput')
+    const mock = {...core}
+    const setOutputStub = sinon.stub(mock, 'setOutput')
+    const checkVersion = new CheckVersion(mock, fs)
 
     let res = await checkVersion.assertComparisons(
       '0.1.1',
@@ -119,8 +124,9 @@ describe('checkVersion', function () {
   })
 
   test('assert is_prerelease and npm_release_tag output if `-` char present in version', async function () {
-    const checkVersion = new CheckVersion(core, fs)
-    const setOutputStub = sinon.stub(core, 'setOutput')
+    const mock = {...core}
+    const setOutputStub = sinon.stub(mock, 'setOutput')
+    const checkVersion = new CheckVersion(mock, fs)
 
     let res = await checkVersion.assertComparisons(
       '0.1.1',
@@ -137,8 +143,9 @@ describe('checkVersion', function () {
   })
 
   test('assert is_prerelease and npm_release_tag output if `-` char NOT in version', async function () {
-    const checkVersion = new CheckVersion(core, fs)
-    const setOutputStub = sinon.stub(core, 'setOutput')
+    const mock = {...core}
+    const setOutputStub = sinon.stub(mock, 'setOutput')
+    const checkVersion = new CheckVersion(mock, fs)
 
     let res = await checkVersion.assertComparisons(
       '0.1.1',

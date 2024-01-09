@@ -1,5 +1,6 @@
 import fsPromises from 'fs/promises'
-var toml = require('toml')
+// @ts-ignore
+import toml from 'toml'
 
 export default class PoetryHandler {
   constructor(private fs: typeof fsPromises) {
