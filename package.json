@@ -7,7 +7,7 @@
   "scripts": {
     "depcheck": "depcheck",
     "check": "tsc",
-    "build": "ncc build  --license licenses.txt ./src/main.ts ",
+    "build": "ncc build  --license licenses.txt ./src/main.ts && mv ./dist/index.js ./dist/index.mjs",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
