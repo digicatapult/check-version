@@ -41,5 +41,5 @@ outputs:
     description: 'release tag for npm packages. `latest` or `next`'
 
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
