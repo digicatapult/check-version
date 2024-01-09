@@ -1,11 +1,12 @@
 import * as ghCore from '@actions/core'
 import fsPromises from 'fs/promises'
 import * as semver from 'semver'
-import {GetTags} from './getTags'
 import {context, getOctokit} from '@actions/github'
-import Cargo from './Cargo'
-import NPMPackageHandler from './npm'
-import PoetryHandler from './Poetry'
+
+import {GetTags} from './getTags.js'
+import Cargo from './Cargo/index.js'
+import NPMPackageHandler from './npm/index.js'
+import PoetryHandler from './Poetry/index.js'
 
 type Tag = {
   name: string

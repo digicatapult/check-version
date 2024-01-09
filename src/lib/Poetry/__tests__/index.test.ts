@@ -2,7 +2,8 @@ import sinon from 'sinon'
 import fs from 'fs/promises'
 import {describe, test} from 'mocha'
 import {expect} from 'chai'
-import PoetryHandler from '..'
+
+import PoetryHandler from '../index.js'
 
 describe('Poetry package manager tests: ', function () {
   afterEach(() => {

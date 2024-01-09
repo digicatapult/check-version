@@ -1,9 +1,10 @@
-import NPMPackageHandler from '..'
 import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
 import {describe, test} from 'mocha'
 import {expect} from 'chai'
+
+import NPMPackageHandler from '../index.js'
 
 describe('NPM package manager tests: ', function () {
   afterEach(() => {
@@ -36,8 +37,9 @@ describe('NPM package manager tests: ', function () {
 
   describe('compare versions', () => {
     test('compare versions failed stubx not called - same', async function () {
-      const setFailedStubx = sinon.stub(core, 'setFailed')
-      const npmPackageHandler = new NPMPackageHandler(fs, core)
+      const mock = {...core}
+      const setFailedStubx = sinon.stub(mock, 'setFailed')
+      const npmPackageHandler = new NPMPackageHandler(fs, mock)
 
       await npmPackageHandler.compareVersions('1.1.1', '1.1.1')
 
@@ -45,9 +47,9 @@ describe('NPM package manager tests: ', function () {
     })
 
     test('compare versions failed stubx not called - not the same ', async function () {
-      const setFailedStubx = sinon.stub(core, 'setFailed')
-
-      const npmPackageHandler = new NPMPackageHandler(fs, core)
+      const mock = {...core}
+      const setFailedStubx = sinon.stub(mock, 'setFailed')
+      const npmPackageHandler = new NPMPackageHandler(fs, mock)
 
       await npmPackageHandler.compareVersions('1.1.1', '2.1.1')
 
