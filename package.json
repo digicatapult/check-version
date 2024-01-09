@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.2.35",
+  "version": "1.2.36",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
     "@vercel/ncc": "^0.38.1",
-    "chai": "^4.4.0",
+    "chai": "^5.0.0",
     "depcheck": "^1.4.7",
     "eslint": "^8.56.0",
     "eslint-plugin-github": "^4.10.1",
