@@ -3,9 +3,9 @@ import {expect} from 'chai'
 import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
-import {CheckVersion} from '../checkVersion'
-import {GetFiles} from '../getFiles'
-import {dummyData, expectedArray, Tag, TestData} from './testData'
+
+import {CheckVersion} from '../lib/checkVersion.js'
+import {dummyData, expectedArray, Tag} from './testData.js'
 
 describe('checkVersion', function () {
   afterEach(() => {
@@ -13,37 +13,30 @@ describe('checkVersion', function () {
     sinon.restore()
   })
 
-  test('reads files in location errors if it does not find two files with package in name', async function () {
-    let error: Error | unknown = null
-    try {
-      const getFiles = new GetFiles(fs)
-      await getFiles.getFiles('some/location')
-    } catch (err: any) {
-      if (err instanceof Error) {
-        error = err
-      }
-    }
+  describe('if package manager is Cargo', () => {
+    test('scans and parses .toml files', async () => {
+      const CV = new CheckVersion(core, fs)
+      const res = await CV.checkVersion({
+        location: './src/lib/Cargo/__tests__/__fixtures__/node',
+        ghToken: '',
+        failOnSameVersion: true,
+        manager: 'cargo'
+      })
 
-    expect(error).instanceOf(Error)
-  })
+      expect(res).to.be.equal(true)
+    })
 
-  test('compare versions failed stubx not called - same', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const checkVersion = new CheckVersion(core, fs)
+    test('returns undefined and does not set outputs if .toml file can not be found', async () => {
+      const CV = new CheckVersion(core, fs)
+      const res = await CV.checkVersion({
+        location: './',
+        ghToken: '',
+        failOnSameVersion: false,
+        manager: 'cargo'
+      })
 
-    await checkVersion.compareVersions('1.1.1', '1.1.1')
-
-    expect(setFailedStubx.calledOnce).to.equal(false)
-  })
-
-  test('compare versions failed stubx not called - not the same ', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-
-    const checkVersion = new CheckVersion(core, fs)
-
-    await checkVersion.compareVersions('1.1.1', '2.1.1')
-
-    expect(setFailedStubx.calledOnce).to.equal(true)
+      expect(res).to.be.undefined
+    })
   })
 
   test('filter through an array of tags and return sorted ones per semver rules', async function () {
@@ -56,30 +49,48 @@ describe('checkVersion', function () {
   })
 
   test('assert comparisons - pass  ', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const checkVersion = new CheckVersion(core, fs)
+    const mock = {...core}
+    const setFailedStubx = sinon.stub(mock, 'setFailed')
+    const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons('1.1.1', '2.1.1')
+    let res = await checkVersion.assertComparisons(
+      '1.1.1',
+      '2.1.1',
+      true,
+      'npm'
+    )
 
     expect(setFailedStubx.calledOnce).to.equal(false)
     expect(res).to.equal(true)
   })
 
   test('assert comparisons - fail  ', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const checkVersion = new CheckVersion(core, fs)
+    const mock = {...core}
+    const setFailedStubx = sinon.stub(mock, 'setFailed')
+    const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons('1.1.1', '0.1.1')
+    let res = await checkVersion.assertComparisons(
+      '1.1.1',
+      '0.1.1',
+      true,
+      'npm'
+    )
 
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
   })
 
   test('assert same version fails', async function () {
-    const setFailedStubx = sinon.stub(core, 'setFailed')
-    const checkVersion = new CheckVersion(core, fs)
+    const mock = {...core}
+    const setFailedStubx = sinon.stub(mock, 'setFailed')
+    const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons('0.1.1', '0.1.1')
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '0.1.1',
+      true,
+      'npm'
+    )
 
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
@@ -88,24 +99,41 @@ describe('checkVersion', function () {
   test('assert same version passes with failOnSameVersion false', async function () {
     const checkVersion = new CheckVersion(core, fs)
 
-    let res = await checkVersion.assertComparisons('0.1.1', '0.1.1', false)
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '0.1.1',
+      false,
+      'npm'
+    )
 
     expect(res).to.equal(true)
   })
 
   test('assert v is added to version output', async function () {
-    const checkVersion = new CheckVersion(core, fs)
-    const setOutputStub = sinon.stub(core, 'setOutput')
+    const mock = {...core}
+    const setOutputStub = sinon.stub(mock, 'setOutput')
+    const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1')
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '1.1.1',
+      true,
+      'npm'
+    )
     expect(setOutputStub.calledWithExactly('version', 'v1.1.1')).to.equal(true)
   })
 
   test('assert is_prerelease and npm_release_tag output if `-` char present in version', async function () {
-    const checkVersion = new CheckVersion(core, fs)
-    const setOutputStub = sinon.stub(core, 'setOutput')
+    const mock = {...core}
+    const setOutputStub = sinon.stub(mock, 'setOutput')
+    const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1-alpha')
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '1.1.1-alpha',
+      true,
+      'npm'
+    )
     expect(setOutputStub.calledWithExactly('is_prerelease', true)).to.equal(
       true
     )
@@ -115,10 +143,16 @@ describe('checkVersion', function () {
   })
 
   test('assert is_prerelease and npm_release_tag output if `-` char NOT in version', async function () {
-    const checkVersion = new CheckVersion(core, fs)
-    const setOutputStub = sinon.stub(core, 'setOutput')
+    const mock = {...core}
+    const setOutputStub = sinon.stub(mock, 'setOutput')
+    const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons('0.1.1', '1.1.1')
+    let res = await checkVersion.assertComparisons(
+      '0.1.1',
+      '1.1.1',
+      true,
+      'npm'
+    )
     expect(setOutputStub.calledWithExactly('is_prerelease', false)).to.equal(
       true
     )

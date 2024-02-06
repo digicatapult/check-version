@@ -1,15 +1,17 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.0.10",
+  "version": "1.3.26",
   "description": "Asserts package version is the same or higher than latest published tag",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
+  "type": "module",
   "scripts": {
     "depcheck": "depcheck",
-    "build": "ncc build  --license licenses.txt ./src/main.ts ",
+    "check": "tsc",
+    "build": "ncc build  --license licenses.txt ./src/main.ts && mv ./dist/index.js ./dist/index.mjs",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "test": "mocha --config .mocharc.js '{,!(node_modules)/**/}*.test.ts'"
+    "test": "mocha --config .mocharc.json '{,!(node_modules)/**/}*.test.ts'"
   },
   "repository": {
     "type": "git",
@@ -24,28 +26,29 @@
   "license": "Apache-2.0",
   "dependencies": {
     "semver": "^7.5.4",
-    "zod": "^3.22.2"
+    "toml": "^3.0.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1",
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
     "@tsconfig/node12": "^12.1.0",
-    "@types/chai": "^4.3.5",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^20.5.6",
-    "@types/semver": "^7.5.0",
-    "@types/sinon": "^10.0.16",
-    "@typescript-eslint/eslint-plugin": "^6.4.1",
-    "@typescript-eslint/parser": "^6.4.1",
-    "@vercel/ncc": "^0.36.1",
-    "chai": "^4.3.8",
-    "depcheck": "^1.4.5",
-    "eslint": "^8.48.0",
-    "eslint-plugin-github": "^4.9.2",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.16",
+    "@types/semver": "^7.5.6",
+    "@types/sinon": "^17.0.3",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "@vercel/ncc": "^0.38.1",
+    "chai": "^5.0.3",
+    "depcheck": "^1.4.7",
+    "eslint": "^8.56.0",
+    "eslint-plugin-github": "^4.10.1",
     "mocha": "^10.2.0",
-    "prettier": "^3.0.2",
-    "sinon": "^15.2.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "prettier": "^3.2.4",
+    "sinon": "^17.0.1",
+    "tsimp": "^2.0.10",
+    "typescript": "^5.3.3"
   }
 }

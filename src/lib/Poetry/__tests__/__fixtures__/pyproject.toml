@@ -1,0 +1,7 @@
+[tool.poetry]
+name = "some-name"
+version = "1.1.0"
+description = ""
+authors = [""]
+license = "sth"
+readme = "README.md"
