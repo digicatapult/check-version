@@ -89,7 +89,7 @@ export class CheckVersion {
         return true
       }
     } catch (err) {
-      console.error(err)
+      this.core.setFailed(`${err}`)
     }
   }
 
