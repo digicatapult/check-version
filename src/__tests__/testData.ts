@@ -8,110 +8,84 @@ export type Tag = {
   tarball_url: string
   node_id: string
 }
-export const expectedArray: Tag[] = [
+
+const restOfTag = {
+  commit: {
+    sha: '',
+    url: 'dummy.url'
+  },
+  zipball_url: 'dummy.url',
+  tarball_url: 'dummy.url',
+  node_id: 'dummy.url'
+}
+export const expectedGreedyArray: Tag[] = [
   {
-    name: '0.0.0',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    name: 'v0.0.0',
+    ...restOfTag
   },
   {
-    name: '0.2.0',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    name: 'v0.2.0',
+    ...restOfTag
   },
   {
-    name: '0.2.1',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    name: '1.0.0', // includes no v prefix
+    ...restOfTag
   },
   {
-    name: '1.2.0',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    name: 'v0.2.1',
+    ...restOfTag
+  },
+  {
+    name: 'v1.2.0',
+    ...restOfTag
   }
 ]
-export const dummyData: Tag[] = [
+export const expectedNonGreedyArray: Tag[] = [
   {
-    name: '1.2.0',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    name: 'v0.0.0',
+    ...restOfTag
+  },
+  {
+    name: 'v0.2.0',
+    ...restOfTag
+  },
+  {
+    name: 'v0.2.1',
+    ...restOfTag
+  },
+  {
+    name: 'v1.2.0',
+    ...restOfTag
+  }
+]
+
+export const dummyTags: Tag[] = [
+  {
+    name: 'v1.2.0',
+    ...restOfTag
   },
   {
     name: 'hello',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    ...restOfTag
   },
   {
-    name: '0.2.0',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    name: 'v0.2.0',
+    ...restOfTag
   },
   {
-    name: '0.2.1',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    name: '1.0.0',
+    ...restOfTag
   },
   {
-    name: '0.0.0',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    name: 'v0.2.1',
+    ...restOfTag
+  },
+  {
+    name: 'v0.0.0',
+    ...restOfTag
   },
   {
     name: 'goodbye',
-    commit: {
-      sha: '',
-      url: 'dummy.url'
-    },
-    zipball_url: 'dummy.url',
-    tarball_url: 'dummy.url',
-    node_id: 'dummy.url'
+    ...restOfTag
   }
 ]
-export class TestData {
-  constructor() {}
-}

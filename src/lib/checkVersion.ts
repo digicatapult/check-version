@@ -29,12 +29,14 @@ export class CheckVersion {
     location,
     ghToken,
     failOnSameVersion,
-    manager
+    manager,
+    tagRegex
   }: {
     location: string
     ghToken: string
     failOnSameVersion: boolean
     manager: string
+    tagRegex: string
   }) {
     let newestTag: string | undefined = undefined
     let sortedTaggedVersions: Tag[] = []
@@ -47,7 +49,10 @@ export class CheckVersion {
 
       if (tags.length > 0) {
         // filter out tags that don't look like releases
-        sortedTaggedVersions = await this.filterTags(tags)
+        sortedTaggedVersions = await this.filterTags(
+          tags,
+          tagRegex ? tagRegex : undefined
+        )
 
         //newest tag from repo
         newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
@@ -61,7 +66,7 @@ export class CheckVersion {
         )
         return isNewVersion
       } else {
-        this.core.setOutput('version', version)
+        this.core.setOutput('version', `v${version}`)
         this.core.setOutput('is_new_version', true)
         this.core.setOutput('build_date', new Date())
 
@@ -110,11 +115,13 @@ export class CheckVersion {
     return result
   }
 
-  async filterTags(tags: Tag[]) {
+  // default regex is greedy
+  async filterTags(tags: Tag[], tagRegex = `\\d+.\\d+.\\d+`) {
     let taggedVersions: Tag[] = []
     try {
+      const regex = new RegExp(tagRegex)
       taggedVersions = tags
-        .filter(t => t.name.match(/\d+.\d+.\d+/))
+        .filter(t => t.name.match(regex))
         .sort((a, b) => semver.compare(a.name, b.name))
     } catch (err) {
       this.core.setFailed(`Error while filtering tags: ${err}`)
@@ -142,21 +149,21 @@ export class CheckVersion {
       this.core.setOutput('is_new_version', false)
 
       this.core.setFailed(
-        `Newest tag: ${newestGithubTag} is a higher version than package.json: ${packageTag}`
+        `Newest tag: ${newestGithubTag} is a higher version than: ${packageTag}`
       )
       return false
     } else if (semver.compare(newestGithubTag, packageTag) === -1) {
       this.core.setOutput('is_new_version', true)
 
       console.log(
-        `Newest tag: ${newestGithubTag} is a lower version than package.json: ${packageTag} \n so we must be releasing new version`
+        `Newest tag: ${newestGithubTag} is a lower version than: ${packageTag} \n so we must be releasing new version`
       )
       return true
     } else if (semver.compare(newestGithubTag, packageTag) === 0) {
       this.core.setOutput('is_new_version', false)
 
       console.log(
-        `Newest tag: ${newestGithubTag} is the same version as package.json: ${packageTag} so not a new version`
+        `Newest tag: ${newestGithubTag} is the same version as: ${packageTag} so not a new version`
       )
 
       if (failOnSameVersion) {

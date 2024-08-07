@@ -18,16 +18,18 @@ with:
   poetry_package_location: './' // optional
   token: ${{ secrets.GITHUB_TOKEN }}
   fail_on_same_version: 'true' // optional
+  tag_regex: '^v\\d+\\.\\d+\\.\\d+$' // optional
 ```
 
-| input                   | required | default | description                                                                                                      |
-| :---------------------- | :------: | :-----: | :--------------------------------------------------------------------------------------------------------------- |
-| package_manager         |    N     |  `npm`  | Provide a package manager as a string. 'npm' is default, other options: `cargo`, `poetry`                        |
-| npm_package_location    |    N     |  `./`   | If package.json and package-lock.json are not in the root directory, provide the correct path to their location. |
-| cargo_package_location  |    N     |  `./`   | Provide path to Cargo.toml file. Default is `./`                                                                 |
-| poetry_package_location |    N     |  `./`   | Provide path to pyproject.toml file. Default is `./`                                                             |
-| token                   |    Y     |    -    | Provide `${{ secrets.GITHUB_TOKEN }}` so the action can access the GitHub API                                    |
-| fail_on_same_version    |    N     | `true`  | Set whether the action should fail if the version exactly matches the latest published tag.                      |
+| input                   | required |      default     | description                                                                                                      |
+| :---------------------- | :------: | :--------------: | :--------------------------------------------------------------------------------------------------------------- |
+| package_manager         |    N     |      `npm`       | Provide a package manager as a string. 'npm' is default, other options: `cargo`, `poetry`                        |
+| npm_package_location    |    N     |      `./`        | If package.json and package-lock.json are not in the root directory, provide the correct path to their location. |
+| cargo_package_location  |    N     |      `./`        | Provide path to Cargo.toml file. Default is `./`                                                                 |
+| poetry_package_location |    N     |      `./`        | Provide path to pyproject.toml file. Default is `./`                                                             |
+| token                   |    Y     |        -         | Provide `${{ secrets.GITHUB_TOKEN }}` so the action can access the GitHub API                                    |
+| fail_on_same_version    |    N     |     `true`       | Set whether the action should fail if the version exactly matches the latest published tag.                      |
+| tag_regex               |    N     | `\\d+.\\d+.\\d+`  | Provide a regex for filtering tags                                                                               |
 
 ## This action produces these outputs:
 

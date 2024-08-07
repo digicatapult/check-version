@@ -5,7 +5,12 @@ import fs from 'fs/promises'
 import * as core from '@actions/core'
 
 import {CheckVersion} from '../lib/checkVersion.js'
-import {dummyData, expectedArray, Tag} from './testData.js'
+import {
+  dummyTags,
+  expectedGreedyArray,
+  expectedNonGreedyArray,
+  Tag
+} from './testData.js'
 
 describe('checkVersion', function () {
   afterEach(() => {
@@ -20,7 +25,8 @@ describe('checkVersion', function () {
         location: './src/lib/Cargo/__tests__/__fixtures__/node',
         ghToken: '',
         failOnSameVersion: true,
-        manager: 'cargo'
+        manager: 'cargo',
+        tagRegex: ''
       })
 
       expect(res).to.be.equal(true)
@@ -32,20 +38,52 @@ describe('checkVersion', function () {
         location: './',
         ghToken: '',
         failOnSameVersion: false,
-        manager: 'cargo'
+        manager: 'cargo',
+        tagRegex: ''
       })
 
       expect(res).to.be.undefined
     })
   })
 
-  test('filter through an array of tags and return sorted ones per semver rules', async function () {
+  test('filter through an array of tags and return sorted ones per semver rules - default regex', async function () {
     const checkVersion = new CheckVersion(core, fs)
 
-    const res: Tag[] = await checkVersion.filterTags(dummyData)
+    const res: Tag[] = await checkVersion.filterTags(dummyTags)
 
-    expect(res[res.length - 1].name).to.equal('1.2.0')
-    expect(res.length).to.equal(expectedArray.length)
+    expect(res[res.length - 1].name).to.equal('v1.2.0')
+    expect(res.length).to.equal(expectedGreedyArray.length)
+  })
+
+  test('filter through an array of tags by user input regex', async function () {
+    const checkVersion = new CheckVersion(core, fs)
+
+    const res: Tag[] = await checkVersion.filterTags(dummyTags, `hello`)
+
+    expect(res.length).to.equal(1)
+    expect(res[0].name).to.equal('hello')
+  })
+
+  test('filter through an array of tags by user input regex - exact v#.#.#', async function () {
+    const checkVersion = new CheckVersion(core, fs)
+
+    const res: Tag[] = await checkVersion.filterTags(
+      dummyTags,
+      `^v\\d+\\.\\d+\\.\\d+$`
+    )
+
+    expect(res[res.length - 1].name).to.equal('v1.2.0')
+    expect(res.length).to.equal(expectedNonGreedyArray.length)
+  })
+
+  test('invalid regex - fails', async function () {
+    const mock = {...core}
+    const setFailedStubx = sinon.stub(mock, 'setFailed')
+    const checkVersion = new CheckVersion(mock, fs)
+
+    await checkVersion.filterTags(dummyTags, `[`)
+
+    expect(setFailedStubx.calledOnce).to.equal(true)
   })
 
   test('assert comparisons - pass  ', async function () {
