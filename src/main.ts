@@ -5,7 +5,7 @@ import {assignManager, stringToBoolean} from './util.js'
 
 type TypeOfCore = typeof core
 
-const ghToken: string = core.getInput('token', {required: true})
+const ghToken: string = core.getInput('token')
 const packageManager: string = core.getInput('package_manager')
 const npmLocation: string = core.getInput('npm_package_location')
 const cargoLocation: string = core.getInput('cargo_package_location')
