@@ -29,7 +29,7 @@ with:
 | poetry_package_location |    N     |      `./`        | Provide path to pyproject.toml file. Default is `./`                                                             |
 | token                   |    Y     |        -         | Provide `${{ secrets.GITHUB_TOKEN }}` so the action can access the GitHub API                                    |
 | fail_on_same_version    |    N     |     `true`       | Set whether the action should fail if the version exactly matches the latest published tag.                      |
-| tag_regex               |    N     | `\\d+.\\d+.\\d+`  | Provide a regex for filtering tags                                                                               |
+| tag_regex               |    N     | `\\d+.\\d+.\\d+` | Provide a double escaped string that becomes the regular expression for filtering tags                           |
 
 ## This action produces these outputs:
 
