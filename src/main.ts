@@ -11,6 +11,7 @@ const npmLocation: string = core.getInput('npm_package_location')
 const cargoLocation: string = core.getInput('cargo_package_location')
 const poetryLocation: string = core.getInput('poetry_package_location')
 const failOnSameVersion: string = core.getInput('fail_on_same_version')
+const tagRegex: string = core.getInput('tag_regex')
 
 async function run(core: TypeOfCore): Promise<void> {
   try {
@@ -30,7 +31,8 @@ async function run(core: TypeOfCore): Promise<void> {
       location: selectManager.location,
       ghToken,
       failOnSameVersion: stringToBoolean(failOnSameVersion),
-      manager: selectManager.manager
+      manager: selectManager.manager,
+      tagRegex
     })
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
