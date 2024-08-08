@@ -29,7 +29,7 @@ inputs:
     required: false
     default: 'true'
   tag_regex:
-    description: 'Double escaped string that becomes the regular expression for filtering tags'
+    description: 'Regular expression for filtering tags'
     required: false
     default: '\d+.\d+.\d+'
 outputs:

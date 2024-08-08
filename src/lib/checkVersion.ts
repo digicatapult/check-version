@@ -49,10 +49,7 @@ export class CheckVersion {
 
       if (tags.length > 0) {
         // filter out tags that don't look like releases
-        sortedTaggedVersions = await this.filterTags(
-          tags,
-          tagRegex ? tagRegex : undefined
-        )
+        sortedTaggedVersions = await this.filterTags(tags, tagRegex)
 
         //newest tag from repo
         newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
@@ -115,12 +112,10 @@ export class CheckVersion {
     return result
   }
 
-  // default regex is greedy
-  async filterTags(tags: Tag[], tagRegex = `\\d+.\\d+.\\d+`) {
+  async filterTags(tags: Tag[], tagRegex: string) {
     let taggedVersions: Tag[] = []
     try {
       const regex = new RegExp(tagRegex)
-      console.log(`Filtering tags using regex: ${regex}`)
       taggedVersions = tags
         .filter(t => t.name.match(regex))
         .sort((a, b) => semver.compare(a.name, b.name))
