@@ -34,8 +34,17 @@ async function run(core: TypeOfCore): Promise<void> {
       manager: selectManager.manager,
       tagRegex
     })
+    printAllOutputs()
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
+  }
+}
+
+function printAllOutputs(): void {
+  for (const key in process.env) {
+    if (key.startsWith('OUTPUT_')) {
+      console.log(`Output ${key}: ${process.env[key]}`)
+    }
   }
 }
 

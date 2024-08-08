@@ -31,7 +31,7 @@ inputs:
   tag_regex:
     description: 'Double escaped string that becomes the regular expression for filtering tags'
     required: false
-    default: '\\d+.\\d+.\\d+'
+    default: '\d+.\d+.\d+'
 outputs:
   is_new_version:
     description: 'boolean indicating if this is a new version true = yes '
