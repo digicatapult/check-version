@@ -120,6 +120,7 @@ export class CheckVersion {
     let taggedVersions: Tag[] = []
     try {
       const regex = new RegExp(tagRegex)
+      console.log(`Filtering tags using regex: ${regex}`)
       taggedVersions = tags
         .filter(t => t.name.match(regex))
         .sort((a, b) => semver.compare(a.name, b.name))
