@@ -63,9 +63,9 @@ export class CheckVersion {
         )
         return isNewVersion
       } else {
-        this.core.setOutput('version', `v${version}`)
-        this.core.setOutput('is_new_version', true)
-        this.core.setOutput('build_date', new Date())
+        this.setOutput('version', `v${version}`)
+        this.setOutput('is_new_version', true)
+        this.setOutput('build_date', new Date())
 
         console.log(
           `There are no remote tags, your local version: ${version} is the most recent.`
@@ -133,30 +133,30 @@ export class CheckVersion {
   ): Promise<boolean> {
     const isPrerelease = packageTag.includes('-')
 
-    this.core.setOutput('build_date', new Date())
-    this.core.setOutput('version', `v${packageTag}`)
-    this.core.setOutput('is_prerelease', isPrerelease)
+    this.setOutput('build_date', new Date())
+    this.setOutput('version', `v${packageTag}`)
+    this.setOutput('is_prerelease', isPrerelease)
 
     if (manager === 'npm') {
-      this.core.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
+      this.setOutput('npm_release_tag', isPrerelease ? 'next' : 'latest')
     }
 
     if (semver.compare(newestGithubTag, packageTag) === 1) {
-      this.core.setOutput('is_new_version', false)
+      this.setOutput('is_new_version', false)
 
       this.core.setFailed(
         `Newest tag: ${newestGithubTag} is a higher version than: ${packageTag}`
       )
       return false
     } else if (semver.compare(newestGithubTag, packageTag) === -1) {
-      this.core.setOutput('is_new_version', true)
+      this.setOutput('is_new_version', true)
 
       console.log(
         `Newest tag: ${newestGithubTag} is a lower version than: ${packageTag} \n so we must be releasing new version`
       )
       return true
     } else if (semver.compare(newestGithubTag, packageTag) === 0) {
-      this.core.setOutput('is_new_version', false)
+      this.setOutput('is_new_version', false)
 
       console.log(
         `Newest tag: ${newestGithubTag} is the same version as: ${packageTag} so not a new version`
@@ -172,5 +172,10 @@ export class CheckVersion {
       this.core.setFailed(`no newest tag`)
       return false
     }
+  }
+
+  setOutput(name: string, value: any) {
+    this.core.setOutput(name, value)
+    console.log(`setting output: { "${name}": "${value}" }`)
   }
 }

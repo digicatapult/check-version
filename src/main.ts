@@ -34,9 +34,6 @@ async function run(core: TypeOfCore): Promise<void> {
       manager: selectManager.manager,
       tagRegex
     })
-
-    const outputsFilePath = process.env['GITHUB_OUTPUT']
-    if (outputsFilePath) console.log(await fs.readFile(outputsFilePath, 'utf8'))
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
