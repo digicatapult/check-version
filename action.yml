@@ -28,6 +28,10 @@ inputs:
     description: 'Should action fail if the version matches the latest published'
     required: false
     default: 'true'
+  tag_regex:
+    description: 'Regular expression for filtering tags'
+    required: false
+    default: '\d+.\d+.\d+'
 outputs:
   is_new_version:
     description: 'boolean indicating if this is a new version true = yes '

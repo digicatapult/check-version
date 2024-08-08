@@ -49,7 +49,10 @@ describe('checkVersion', function () {
   test('filter through an array of tags and return sorted ones per semver rules - default regex', async function () {
     const checkVersion = new CheckVersion(core, fs)
 
-    const res: Tag[] = await checkVersion.filterTags(dummyTags)
+    const res: Tag[] = await checkVersion.filterTags(
+      dummyTags,
+      `\\d+.\\d+.\\d+`
+    )
 
     expect(res[res.length - 1].name).to.equal('v1.2.0')
     expect(res.length).to.equal(expectedGreedyArray.length)
