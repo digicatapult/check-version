@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.4.13",
+  "version": "1.4.14",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -47,7 +47,7 @@
     "eslint-plugin-github": "^5.0.1",
     "mocha": "^10.7.3",
     "prettier": "^3.3.3",
-    "sinon": "^18.0.0",
+    "sinon": "^18.0.1",
     "tsimp": "^2.0.11",
     "typescript": "^5.6.2"
   }
