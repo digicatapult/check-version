@@ -1,6 +1,6 @@
 {
   "node-option": [
-    "import=tsimp/import"
+    "import=@digicatapult/tsimp/import"
   ],
   "ignore": [
     "/build/",
