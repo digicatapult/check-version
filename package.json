@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.4.54",
+  "version": "1.4.55",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -49,6 +49,6 @@
     "prettier": "^3.3.3",
     "sinon": "^19.0.2",
     "@digicatapult/tsimp": "^2.0.12",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }
