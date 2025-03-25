@@ -1,17 +1,7 @@
 {
-  "node-option": [
-    "import=@digicatapult/tsimp/import"
-  ],
-  "ignore": [
-    "/build/",
-    "/node_modules/",
-    "./build/",
-    "./node_modules/"
-  ],
+  "node-option": ["import=@swc-node/register/esm-register"],
   "timeout": 100,
-  "extension": [
-    "test.ts"
-  ],
+  "extension": ["test.ts"],
   "bail": false,
   "package": "./package.json",
   "fullTrace": false,

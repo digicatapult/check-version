@@ -18,7 +18,7 @@ describe('NPM package manager tests: ', function () {
       try {
         const npmPackageHandler = new NPMPackageHandler(fs, core)
         await npmPackageHandler.scan('some/location/')
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (err instanceof Error) {
           error = err
         }

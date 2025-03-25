@@ -17,7 +17,7 @@ describe('Poetry package manager tests: ', function () {
       try {
         const poetryPackageHandler = new PoetryHandler(fs)
         await poetryPackageHandler.scan('some/location/')
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (err instanceof Error) {
           error = err
         }
