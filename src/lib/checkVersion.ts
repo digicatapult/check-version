@@ -1,12 +1,12 @@
-import * as ghCore from '@actions/core'
 import fsPromises from 'fs/promises'
 import * as semver from 'semver'
-import {context, getOctokit} from '@actions/github'
+import { context, getOctokit } from '@actions/github'
 
-import {GetTags} from './getTags.js'
+import { GetTags } from './getTags.js'
 import Cargo from './Cargo/index.js'
 import NPMPackageHandler from './npm/index.js'
 import PoetryHandler from './Poetry/index.js'
+import { type Github } from '../main.js'
 
 type Tag = {
   name: string
@@ -21,7 +21,7 @@ type Tag = {
 
 export class CheckVersion {
   constructor(
-    private core: typeof ghCore,
+    private core: Github,
     private fs: typeof fsPromises
   ) {}
 
@@ -30,7 +30,7 @@ export class CheckVersion {
     ghToken,
     failOnSameVersion,
     manager,
-    tagRegex
+    tagRegex,
   }: {
     location: string
     ghToken: string
@@ -55,21 +55,14 @@ export class CheckVersion {
         newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
 
         //assert comparisons to newest tag
-        const isNewVersion: Promise<Boolean> = this.assertComparisons(
-          newestTag,
-          version,
-          failOnSameVersion,
-          manager
-        )
+        const isNewVersion: Promise<boolean> = this.assertComparisons(newestTag, version, failOnSameVersion, manager)
         return isNewVersion
       } else {
         this.setOutput('version', `v${version}`)
         this.setOutput('is_new_version', true)
         this.setOutput('build_date', new Date())
 
-        console.log(
-          `There are no remote tags, your local version: ${version} is the most recent.`
-        )
+        console.log(`There are no remote tags, your local version: ${version} is the most recent.`)
         return true
       }
     } catch (err) {
@@ -116,9 +109,7 @@ export class CheckVersion {
     let taggedVersions: Tag[] = []
     try {
       const regex = new RegExp(tagRegex)
-      taggedVersions = tags
-        .filter(t => t.name.match(regex))
-        .sort((a, b) => semver.compare(a.name, b.name))
+      taggedVersions = tags.filter((t) => t.name.match(regex)).sort((a, b) => semver.compare(a.name, b.name))
     } catch (err) {
       this.core.setFailed(`Error while filtering tags: ${err}`)
     }
@@ -144,9 +135,7 @@ export class CheckVersion {
     if (semver.compare(newestGithubTag, packageTag) === 1) {
       this.setOutput('is_new_version', false)
 
-      this.core.setFailed(
-        `Newest tag: ${newestGithubTag} is a higher version than: ${packageTag}`
-      )
+      this.core.setFailed(`Newest tag: ${newestGithubTag} is a higher version than: ${packageTag}`)
       return false
     } else if (semver.compare(newestGithubTag, packageTag) === -1) {
       this.setOutput('is_new_version', true)
@@ -158,9 +147,7 @@ export class CheckVersion {
     } else if (semver.compare(newestGithubTag, packageTag) === 0) {
       this.setOutput('is_new_version', false)
 
-      console.log(
-        `Newest tag: ${newestGithubTag} is the same version as: ${packageTag} so not a new version`
-      )
+      console.log(`Newest tag: ${newestGithubTag} is the same version as: ${packageTag} so not a new version`)
 
       if (failOnSameVersion) {
         this.core.setFailed(`Failing on same version`)
@@ -174,7 +161,7 @@ export class CheckVersion {
     }
   }
 
-  setOutput(name: string, value: any) {
+  setOutput(name: string, value: unknown) {
     this.core.setOutput(name, value)
     console.log(`setting output: { "${name}": "${value}" }`)
   }

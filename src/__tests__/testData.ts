@@ -12,80 +12,80 @@ export type Tag = {
 const restOfTag = {
   commit: {
     sha: '',
-    url: 'dummy.url'
+    url: 'dummy.url',
   },
   zipball_url: 'dummy.url',
   tarball_url: 'dummy.url',
-  node_id: 'dummy.url'
+  node_id: 'dummy.url',
 }
 export const expectedGreedyArray: Tag[] = [
   {
     name: 'v0.0.0',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v0.2.0',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: '1.0.0', // includes no v prefix
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v0.2.1',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v1.2.0',
-    ...restOfTag
-  }
+    ...restOfTag,
+  },
 ]
 export const expectedNonGreedyArray: Tag[] = [
   {
     name: 'v0.0.0',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v0.2.0',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v0.2.1',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v1.2.0',
-    ...restOfTag
-  }
+    ...restOfTag,
+  },
 ]
 
 export const dummyTags: Tag[] = [
   {
     name: 'v1.2.0',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'hello',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v0.2.0',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: '1.0.0',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v0.2.1',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'v0.0.0',
-    ...restOfTag
+    ...restOfTag,
   },
   {
     name: 'goodbye',
-    ...restOfTag
-  }
+    ...restOfTag,
+  },
 ]

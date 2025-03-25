@@ -1,16 +1,11 @@
-import {describe, test} from 'mocha'
-import {expect} from 'chai'
+import { describe, test } from 'mocha'
+import { expect } from 'chai'
 import sinon from 'sinon'
 import fs from 'fs/promises'
 import * as core from '@actions/core'
 
-import {CheckVersion} from '../lib/checkVersion.js'
-import {
-  dummyTags,
-  expectedGreedyArray,
-  expectedNonGreedyArray,
-  Tag
-} from './testData.js'
+import { CheckVersion } from '../lib/checkVersion.js'
+import { dummyTags, expectedGreedyArray, expectedNonGreedyArray, Tag } from './testData.js'
 
 describe('checkVersion', function () {
   afterEach(() => {
@@ -26,7 +21,7 @@ describe('checkVersion', function () {
         ghToken: '',
         failOnSameVersion: true,
         manager: 'cargo',
-        tagRegex: ''
+        tagRegex: '',
       })
 
       expect(res).to.be.equal(true)
@@ -39,20 +34,17 @@ describe('checkVersion', function () {
         ghToken: '',
         failOnSameVersion: false,
         manager: 'cargo',
-        tagRegex: ''
+        tagRegex: '',
       })
 
-      expect(res).to.be.undefined
+      expect(res).to.equal(undefined)
     })
   })
 
   test('filter through an array of tags and return sorted ones per semver rules - default regex', async function () {
     const checkVersion = new CheckVersion(core, fs)
 
-    const res: Tag[] = await checkVersion.filterTags(
-      dummyTags,
-      `\\d+.\\d+.\\d+`
-    )
+    const res: Tag[] = await checkVersion.filterTags(dummyTags, `\\d+.\\d+.\\d+`)
 
     expect(res[res.length - 1].name).to.equal('v1.2.0')
     expect(res.length).to.equal(expectedGreedyArray.length)
@@ -70,17 +62,14 @@ describe('checkVersion', function () {
   test('filter through an array of tags by user input regex - exact v#.#.#', async function () {
     const checkVersion = new CheckVersion(core, fs)
 
-    const res: Tag[] = await checkVersion.filterTags(
-      dummyTags,
-      `^v\\d+\\.\\d+\\.\\d+$`
-    )
+    const res: Tag[] = await checkVersion.filterTags(dummyTags, `^v\\d+\\.\\d+\\.\\d+$`)
 
     expect(res[res.length - 1].name).to.equal('v1.2.0')
     expect(res.length).to.equal(expectedNonGreedyArray.length)
   })
 
   test('invalid regex - fails', async function () {
-    const mock = {...core}
+    const mock = { ...core }
     const setFailedStubx = sinon.stub(mock, 'setFailed')
     const checkVersion = new CheckVersion(mock, fs)
 
@@ -90,48 +79,33 @@ describe('checkVersion', function () {
   })
 
   test('assert comparisons - pass  ', async function () {
-    const mock = {...core}
+    const mock = { ...core }
     const setFailedStubx = sinon.stub(mock, 'setFailed')
     const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons(
-      '1.1.1',
-      '2.1.1',
-      true,
-      'npm'
-    )
+    const res = await checkVersion.assertComparisons('1.1.1', '2.1.1', true, 'npm')
 
     expect(setFailedStubx.calledOnce).to.equal(false)
     expect(res).to.equal(true)
   })
 
   test('assert comparisons - fail  ', async function () {
-    const mock = {...core}
+    const mock = { ...core }
     const setFailedStubx = sinon.stub(mock, 'setFailed')
     const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons(
-      '1.1.1',
-      '0.1.1',
-      true,
-      'npm'
-    )
+    const res = await checkVersion.assertComparisons('1.1.1', '0.1.1', true, 'npm')
 
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
   })
 
   test('assert same version fails', async function () {
-    const mock = {...core}
+    const mock = { ...core }
     const setFailedStubx = sinon.stub(mock, 'setFailed')
     const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons(
-      '0.1.1',
-      '0.1.1',
-      true,
-      'npm'
-    )
+    const res = await checkVersion.assertComparisons('0.1.1', '0.1.1', true, 'npm')
 
     expect(setFailedStubx.calledOnce).to.equal(true)
     expect(res).to.equal(false)
@@ -140,65 +114,37 @@ describe('checkVersion', function () {
   test('assert same version passes with failOnSameVersion false', async function () {
     const checkVersion = new CheckVersion(core, fs)
 
-    let res = await checkVersion.assertComparisons(
-      '0.1.1',
-      '0.1.1',
-      false,
-      'npm'
-    )
+    const res = await checkVersion.assertComparisons('0.1.1', '0.1.1', false, 'npm')
 
     expect(res).to.equal(true)
   })
 
   test('assert v is added to version output', async function () {
-    const mock = {...core}
+    const mock = { ...core }
     const setOutputStub = sinon.stub(mock, 'setOutput')
     const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons(
-      '0.1.1',
-      '1.1.1',
-      true,
-      'npm'
-    )
+    await checkVersion.assertComparisons('0.1.1', '1.1.1', true, 'npm')
     expect(setOutputStub.calledWithExactly('version', 'v1.1.1')).to.equal(true)
   })
 
   test('assert is_prerelease and npm_release_tag output if `-` char present in version', async function () {
-    const mock = {...core}
+    const mock = { ...core }
     const setOutputStub = sinon.stub(mock, 'setOutput')
     const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons(
-      '0.1.1',
-      '1.1.1-alpha',
-      true,
-      'npm'
-    )
-    expect(setOutputStub.calledWithExactly('is_prerelease', true)).to.equal(
-      true
-    )
-    expect(setOutputStub.calledWithExactly('npm_release_tag', 'next')).to.equal(
-      true
-    )
+    await checkVersion.assertComparisons('0.1.1', '1.1.1-alpha', true, 'npm')
+    expect(setOutputStub.calledWithExactly('is_prerelease', true)).to.equal(true)
+    expect(setOutputStub.calledWithExactly('npm_release_tag', 'next')).to.equal(true)
   })
 
   test('assert is_prerelease and npm_release_tag output if `-` char NOT in version', async function () {
-    const mock = {...core}
+    const mock = { ...core }
     const setOutputStub = sinon.stub(mock, 'setOutput')
     const checkVersion = new CheckVersion(mock, fs)
 
-    let res = await checkVersion.assertComparisons(
-      '0.1.1',
-      '1.1.1',
-      true,
-      'npm'
-    )
-    expect(setOutputStub.calledWithExactly('is_prerelease', false)).to.equal(
-      true
-    )
-    expect(
-      setOutputStub.calledWithExactly('npm_release_tag', 'latest')
-    ).to.equal(true)
+    await checkVersion.assertComparisons('0.1.1', '1.1.1', true, 'npm')
+    expect(setOutputStub.calledWithExactly('is_prerelease', false)).to.equal(true)
+    expect(setOutputStub.calledWithExactly('npm_release_tag', 'latest')).to.equal(true)
   })
 })

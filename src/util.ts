@@ -16,12 +16,12 @@ export async function assignManager(
   packageManager: string
 ) {
   if (packageManager === 'npm') {
-    return {location: npmLocation, manager: 'npm'}
+    return { location: npmLocation, manager: 'npm' }
   }
   if (packageManager === 'cargo') {
-    return {location: cargoLocation, manager: 'cargo'}
+    return { location: cargoLocation, manager: 'cargo' }
   }
   if (packageManager === 'poetry') {
-    return {location: poetryLocation, manager: 'poetry'}
+    return { location: poetryLocation, manager: 'poetry' }
   }
 }
