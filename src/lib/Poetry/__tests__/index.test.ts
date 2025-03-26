@@ -1,7 +1,7 @@
 import sinon from 'sinon'
 import fs from 'fs/promises'
-import {describe, test} from 'mocha'
-import {expect} from 'chai'
+import { describe, test } from 'mocha'
+import { expect } from 'chai'
 
 import PoetryHandler from '../index.js'
 
@@ -17,7 +17,7 @@ describe('Poetry package manager tests: ', function () {
       try {
         const poetryPackageHandler = new PoetryHandler(fs)
         await poetryPackageHandler.scan('some/location/')
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (err instanceof Error) {
           error = err
         }
@@ -27,9 +27,7 @@ describe('Poetry package manager tests: ', function () {
     test('reads files in location and finds version for pyproject.toml', async function () {
       let res = ''
       const poetryPackageHandler = new PoetryHandler(fs)
-      res = await poetryPackageHandler.scan(
-        './src/lib/Poetry/__tests__/__fixtures__/'
-      )
+      res = await poetryPackageHandler.scan('./src/lib/Poetry/__tests__/__fixtures__/')
       expect(res.length).to.above(1)
     })
   })
