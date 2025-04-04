@@ -1,5 +1,4 @@
 import fsPromises from 'fs/promises'
-// @ts-ignore
 import toml from 'toml'
 
 export default class PoetryHandler {
@@ -10,7 +9,7 @@ export default class PoetryHandler {
   async scan(location: string) {
     const name = 'pyproject.toml'
     const contents: string = await this.fs.readFile(location + name, 'utf8')
-    const {dependencies, ...rest} = toml.parse(contents)
+    const { dependencies, ...rest } = toml.parse(contents)
     return rest.tool.poetry.version
   }
 }

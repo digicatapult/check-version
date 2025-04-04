@@ -1,4 +1,4 @@
-import {context, getOctokit} from '@actions/github'
+import { context, getOctokit } from '@actions/github'
 
 export class GetTags {
   constructor(
@@ -7,7 +7,7 @@ export class GetTags {
   ) {}
 
   async getTagsFromGithub(ghToken: string) {
-    let result: {
+    let result: Array<{
       name: string
       commit: {
         sha: string
@@ -16,14 +16,14 @@ export class GetTags {
       zipball_url: string
       tarball_url: string
       node_id: string
-    }[] = []
+    }> = []
     try {
       if (ghToken) {
         const octokit = this.getOkit(ghToken)
 
         const res = await octokit.rest.repos.listTags({
           repo: this.ctx.repo.repo,
-          owner: this.ctx.repo.owner
+          owner: this.ctx.repo.owner,
         })
 
         result = res.data
