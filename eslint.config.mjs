@@ -1,5 +1,4 @@
 import prettier from 'eslint-plugin-prettier'
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
 import globals from 'globals'
 import tsParser from '@typescript-eslint/parser'
 import path from 'node:path'
@@ -20,12 +19,11 @@ export default [
   {
     ignores: ['**/node_modules', '**/package.json', '**/build'],
   },
-  ...compat.extends('eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'),
+  ...compat.extends('eslint:recommended', 'prettier'),
   ...github.getFlatConfigs().typescript,
   {
     plugins: {
       prettier,
-      '@typescript-eslint': typescriptEslint,
     },
 
     languageOptions: {
