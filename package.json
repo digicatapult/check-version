@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.4.128",
+  "version": "1.4.129",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -27,7 +27,7 @@
   "dependencies": {
     "semver": "^7.7.2",
     "toml": "^3.0.0",
-    "zod": "^3.25.17"
+    "zod": "^3.25.28"
   },
   "devDependencies": {
     "@actions/core": "^1.11.1",
@@ -50,7 +50,7 @@
     "eslint-plugin-github": "^6.0.0",
     "eslint-plugin-prettier": "^5.4.0",
     "globals": "^16.1.0",
-    "mocha": "^11.4.0",
+    "mocha": "^11.5.0",
     "prettier": "^3.5.3",
     "sinon": "^20.0.0",
     "typescript": "^5.8.3"
