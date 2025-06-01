@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.4.131",
+  "version": "1.4.132",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -27,7 +27,7 @@
   "dependencies": {
     "semver": "^7.7.2",
     "toml": "^3.0.0",
-    "zod": "^3.25.32"
+    "zod": "^3.25.34"
   },
   "devDependencies": {
     "@actions/core": "^1.11.1",
@@ -39,7 +39,7 @@
     "@tsconfig/node12": "^12.1.4",
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.17.51",
+    "@types/node": "^20.17.52",
     "@types/semver": "^7.7.0",
     "@types/sinon": "^17.0.4",
     "@typescript-eslint/parser": "^8.33.0",
