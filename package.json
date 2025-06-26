@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.4.144",
+  "version": "1.4.145",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -27,7 +27,7 @@
   "dependencies": {
     "semver": "^7.7.2",
     "toml": "^3.0.0",
-    "zod": "^3.25.64"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@actions/core": "^1.11.1",
@@ -39,19 +39,19 @@
     "@tsconfig/node12": "^12.1.4",
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.19.0",
+    "@types/node": "^20.19.1",
     "@types/semver": "^7.7.0",
     "@types/sinon": "^17.0.4",
-    "@typescript-eslint/parser": "^8.34.0",
+    "@typescript-eslint/parser": "^8.35.0",
     "@vercel/ncc": "^0.38.3",
     "chai": "^5.2.0",
     "depcheck": "^1.4.7",
     "eslint": "^9.29.0",
     "eslint-plugin-github": "^6.0.0",
-    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-prettier": "^5.5.0",
     "globals": "^16.2.0",
-    "mocha": "^11.6.0",
-    "prettier": "^3.5.3",
+    "mocha": "^11.7.0",
+    "prettier": "^3.6.0",
     "sinon": "^21.0.0",
     "typescript": "^5.8.3"
   }
