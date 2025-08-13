@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.4.162",
+  "version": "1.4.163",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -11,7 +11,7 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint .",
-    "test": "mocha --config mocharc.json ./src/**/__tests__/**/*.test.ts"
+    "test": "NODE_OPTIONS='--no-experimental-strip-types' mocha --config mocharc.json ./src/**/__tests__/**/*.test.ts"
   },
   "repository": {
     "type": "git",
