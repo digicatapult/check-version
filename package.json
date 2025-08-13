@@ -11,7 +11,7 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint .",
-    "test": "mocha --config mocharc.json ./src/**/__tests__/**/*.test.ts"
+    "test": "NODE_OPTIONS='--no-experimental-strip-types' mocha --config mocharc.json ./src/**/__tests__/**/*.test.ts"
   },
   "repository": {
     "type": "git",
