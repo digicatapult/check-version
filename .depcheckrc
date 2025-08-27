@@ -1,6 +1,7 @@
 {
   "ignores": [
     "@swc-node/register",
-    "@swc/cli"
+    "@swc/cli",
+    "@swc/core"
   ]
 }
