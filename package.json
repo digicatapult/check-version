@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.4.187",
+  "version": "1.4.188",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -25,9 +25,9 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "semver": "^7.7.2",
+    "semver": "^7.7.3",
     "toml": "^3.0.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@actions/core": "^1.11.1",
@@ -43,7 +43,7 @@
     "@types/node": "^20.19.19",
     "@types/semver": "^7.7.1",
     "@types/sinon": "^17.0.4",
-    "@typescript-eslint/parser": "^8.45.0",
+    "@typescript-eslint/parser": "^8.46.0",
     "@vercel/ncc": "^0.38.4",
     "chai": "^6.2.0",
     "depcheck": "^1.4.7",
