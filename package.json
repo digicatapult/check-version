@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.4.197",
+  "version": "1.4.198",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -35,8 +35,8 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.39.1",
     "@swc-node/register": "^1.11.1",
-    "@swc/cli": "^0.7.8",
-    "@swc/core": "^1.14.0",
+    "@swc/cli": "^0.7.9",
+    "@swc/core": "^1.15.0",
     "@tsconfig/node12": "^12.1.5",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
@@ -51,7 +51,7 @@
     "eslint-plugin-github": "^6.0.0",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.5.0",
-    "mocha": "^11.7.4",
+    "mocha": "^11.7.5",
     "prettier": "^3.6.2",
     "sinon": "^21.0.0",
     "typescript": "^5.9.3"
