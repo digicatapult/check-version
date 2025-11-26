@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -36,7 +36,7 @@
     "@eslint/js": "^9.39.1",
     "@swc-node/register": "^1.11.1",
     "@swc/cli": "^0.7.9",
-    "@swc/core": "^1.15.2",
+    "@swc/core": "^1.15.3",
     "@tsconfig/node12": "^12.1.7",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
