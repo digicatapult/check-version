@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.5.11",
+  "version": "1.5.12",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -43,7 +43,7 @@
     "@types/node": "^20.19.25",
     "@types/semver": "^7.7.1",
     "@types/sinon": "^21.0.0",
-    "@typescript-eslint/parser": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.1",
     "@vercel/ncc": "^0.38.4",
     "chai": "^6.2.1",
     "depcheck": "^1.4.7",
@@ -52,7 +52,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.5.0",
     "mocha": "^11.7.5",
-    "prettier": "^3.7.3",
+    "prettier": "^3.7.4",
     "sinon": "^21.0.0",
     "typescript": "^5.9.3"
   },
