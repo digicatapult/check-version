@@ -17,7 +17,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['**/node_modules', '**/package.json', '**/build'],
+    ignores: ['**/node_modules', '**/package.json', '**/build', '**/dist'],
   },
   ...compat.extends('eslint:recommended', 'prettier'),
   ...github.getFlatConfigs().typescript,

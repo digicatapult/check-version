@@ -1,7 +1,14 @@
 {
-  "extends": "@tsconfig/node12/tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "noEmit": true
+    "noEmit": true,
+    "module": "nodenext",
+    "target": "es2024",
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "nodenext",
+    "declaration": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
   },
 }
