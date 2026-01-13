@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.5.27",
+  "version": "1.5.28",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -30,7 +30,7 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
-    "@actions/core": "^2.0.1",
+    "@actions/core": "^2.0.2",
     "@actions/github": "^6.0.1",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
@@ -39,7 +39,7 @@
     "@swc/core": "^1.15.8",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.19.27",
+    "@types/node": "^20.19.28",
     "@types/semver": "^7.7.1",
     "@types/sinon": "^21.0.0",
     "@typescript-eslint/parser": "^8.52.0",
