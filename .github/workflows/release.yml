@@ -8,11 +8,15 @@ jobs:
   static-checks:
     name: Run Static Analysis Checks
     uses: digicatapult/shared-workflows/.github/workflows/static-checks-npm.yml@main
+    permissions:
+      security-events: write
     with:
       matrix_commands: '["lint", "depcheck"]'
 
   tests:
     uses: digicatapult/shared-workflows/.github/workflows/tests-npm.yml@main
+    permissions:
+      pull-requests: write
     with:
       coverage: false
       docker_compose_file: ''
@@ -22,11 +26,11 @@ jobs:
   check-version:
     name: 'Check version'
     uses: digicatapult/shared-workflows/.github/workflows/check-version.yml@main
+    permissions: {}
 
   generate-sbom-npm:
-    permissions:
-      contents: read
     uses: digicatapult/shared-workflows/.github/workflows/generate-sbom-npm.yml@main
+    permissions: {}
     with:
       additional_args: "--ignore-npm-errors"
       enable_check_version: true
@@ -39,5 +43,8 @@ jobs:
   publish:
     needs: [check-version, generate-sbom-npm, tests]
     uses: digicatapult/shared-workflows/.github/workflows/release-github.yml@main
+    permissions:
+      contents: write
+      pull-requests: read
     with:
       get_sbom: true
