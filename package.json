@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.5.36",
+  "version": "1.5.37",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@actions/core": "^2.0.2",
-    "@actions/github": "^7.0.0",
+    "@actions/github": "^8.0.1",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
     "@swc-node/register": "^1.11.1",
