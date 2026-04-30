@@ -38,9 +38,6 @@ export class CheckVersion {
     manager: string
     tagRegex: string
   }) {
-    let newestTag: string | undefined = undefined
-    let sortedTaggedVersions: Tag[] = []
-
     try {
       const version: string = await this.getVersion(manager, location)
       //processing tags
@@ -49,10 +46,10 @@ export class CheckVersion {
 
       if (tags.length > 0) {
         // filter out tags that don't look like releases
-        sortedTaggedVersions = await this.filterTags(tags, tagRegex)
+        const sortedTaggedVersions = await this.filterTags(tags, tagRegex)
 
         //newest tag from repo
-        newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
+        const newestTag = sortedTaggedVersions[sortedTaggedVersions.length - 1].name
 
         //assert comparisons to newest tag
         const isNewVersion: Promise<boolean> = this.assertComparisons(newestTag, version, failOnSameVersion, manager)

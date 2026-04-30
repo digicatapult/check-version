@@ -25,9 +25,8 @@ describe('Poetry package manager tests: ', function () {
       expect(error).instanceOf(Error)
     })
     test('reads files in location and finds version for pyproject.toml', async function () {
-      let res = ''
       const poetryPackageHandler = new PoetryHandler(fs)
-      res = await poetryPackageHandler.scan('./src/lib/Poetry/__tests__/__fixtures__/')
+      const res = await poetryPackageHandler.scan('./src/lib/Poetry/__tests__/__fixtures__/')
       expect(res.length).to.above(1)
     })
   })

@@ -26,11 +26,9 @@ describe('NPM package manager tests: ', function () {
       expect(error).instanceOf(Error)
     })
     test('reads files in location and finds versions for package.json and package-lock.json', async function () {
-      let res = ''
       const npmPackageHandler = new NPMPackageHandler(fs, core)
-      res = await npmPackageHandler.scan('./')
+      const res = await npmPackageHandler.scan('./')
 
-      // expect(res['packageJsonLock']).to.equal(res['packageJson']) //do we want to include this assertion?
       expect(res.length).to.above(1)
     })
   })
