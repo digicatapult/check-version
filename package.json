@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.5.64",
+  "version": "1.5.65",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -27,7 +27,7 @@
   "dependencies": {
     "semver": "^7.7.4",
     "toml": "^4.1.1",
-    "zod": "^4.4.1"
+    "zod": "^4.4.2"
   },
   "devDependencies": {
     "@actions/core": "^3.0.1",
@@ -47,10 +47,10 @@
     "@vercel/ncc": "^0.38.4",
     "chai": "^6.2.2",
     "depcheck": "^1.4.7",
-    "eslint": "^10.2.1",
+    "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^17.5.0",
+    "globals": "^17.6.0",
     "mocha": "^11.7.5",
     "prettier": "^3.8.3",
     "sinon": "^21.1.2",
