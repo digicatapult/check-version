@@ -32,3 +32,8 @@ jobs:
     permissions: {}
     with:
       additional_args: "--ignore-npm-errors"
+
+  scan-secrets:
+    uses: digicatapult/shared-workflows/.github/workflows/scan-secrets.yml@main
+    permissions:
+      contents: read
