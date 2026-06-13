@@ -12,6 +12,7 @@ jobs:
       security-events: write
     with:
       matrix_commands: '["lint", "depcheck"]'
+      enable_trufflehog_action: true
 
   tests:
     uses: digicatapult/shared-workflows/.github/workflows/tests-npm.yml@main
@@ -32,8 +33,3 @@ jobs:
     permissions: {}
     with:
       additional_args: "--ignore-npm-errors"
-
-  scan-secrets:
-    uses: digicatapult/shared-workflows/.github/workflows/scan-secrets.yml@main
-    permissions:
-      contents: read
