@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.5.87",
+  "version": "1.5.88",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -41,7 +41,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^20.19.43",
     "@types/semver": "^7.7.1",
-    "@types/sinon": "^21.0.1",
+    "@types/sinon": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^8.62.1",
     "@typescript-eslint/parser": "^8.62.1",
     "@vercel/ncc": "^0.44.1",
