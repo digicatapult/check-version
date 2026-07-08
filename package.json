@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.5.88",
+  "version": "1.5.89",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -26,7 +26,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "semver": "^7.8.5",
-    "toml": "^4.1.1",
+    "toml": "^4.1.2",
     "zod": "^4.4.3"
   },
   "devDependencies": {
