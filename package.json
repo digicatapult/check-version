@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/check-version",
-  "version": "1.5.94",
+  "version": "1.5.95",
   "description": "Asserts package version is the same or higher than latest published tag",
   "main": "dist/index.mjs",
   "type": "module",
@@ -54,7 +54,7 @@
     "mocha": "^11.7.6",
     "prettier": "^3.9.5",
     "sinon": "^22.1.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "engines": {
     "node": "24.x",
