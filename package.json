@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "depcheck": "depcheck",
-    "check": "tsc",
+    "check": "node node_modules/@typescript/native/bin/tsc --noEmit",
     "build": "ncc build  --license licenses.txt ./src/main.ts && mv ./dist/index.js ./dist/index.mjs",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
