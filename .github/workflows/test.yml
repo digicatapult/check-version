@@ -11,7 +11,7 @@ jobs:
     permissions:
       security-events: write
     with:
-      matrix_commands: '["lint", "depcheck"]'
+      matrix_commands: '["lint", "depcheck", "check"]'
       enable_trufflehog_action: true
 
   tests:
