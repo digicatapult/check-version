@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "depcheck": "depcheck",
-    "check": "node node_modules/tsc-native/bin/tsc --noEmit",
+    "check": "node node_modules/@typescript/native/bin/tsc --noEmit",
     "build": "ncc build  --license licenses.txt ./src/main.ts && mv ./dist/index.js ./dist/index.mjs",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
@@ -54,11 +54,14 @@
     "mocha": "^11.8.0",
     "prettier": "^3.9.6",
     "sinon": "^22.1.0",
-    "tsc-native": "npm:typescript@^7.0.2",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "engines": {
     "node": "24.x",
-    "npm": "11.x"
+    "npm": "12.x"
+  },
+  "allowScripts": {
+    "@swc/core@1.15.47": true
   }
 }

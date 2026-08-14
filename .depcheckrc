@@ -2,7 +2,6 @@
   "ignores": [
     "@swc-node/register",
     "@swc/cli",
-    "@swc/core",
-    "tsc-native"
+    "@swc/core"
   ]
 }
